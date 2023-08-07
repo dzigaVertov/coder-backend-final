@@ -1,0 +1,44 @@
+.lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+
+.card {
+    border: 1px solid black;
+    border-radius: 5px 5px 5px;
+    max-width: 200px;
+    padding: 1rem;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+}
+
+.card:hover {
+    overflow: scroll;
+}
+
+.listaMensajes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.mensaje {
+    border: 1px solid gray;
+    border-radius: 5px 5px 5px;
+    padding: 10px;
+    text-decoration: none;
+    max-width: 300px;
+}
+
+.mensaje:nth-child(even) {
+    background-color: lightblue;
+}
+
+.mensaje:nth-child(odd) {
+    background-color: lightsalmon;
+}

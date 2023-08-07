@@ -1,0 +1,13 @@
+components:
+  requestBodies:
+    NewCart:
+      type: object
+      required:
+        owner
+      properties:
+        owner:
+          type: string
+          description: The id of the cart's owner.
+
+      example:
+         owner: fdkj-2338-23lf2-33kjl

@@ -1,0 +1,23 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      required:
+        - id
+        - owner
+        - products
+      properties:
+        id:
+          type: string
+          description: The auto-generated id of the cart.
+        owner:
+          type: string
+          description: The id of the cart owner
+        products:
+          type: array
+          description: Los productos contenidos en el cart
+      example:
+         id: 4ughd7-3658fn-sk85d-h58sk
+         owner: 4ughd7-3658fn-sk85d-h58sk
+         products: [4ughd7-3658fn-sk85d-h58sk, 4ughd7-3658fn-sk85d-h58sk, 4ughd7-3658fn-sk85d-h58sk]
+

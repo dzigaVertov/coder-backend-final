@@ -1,0 +1,27 @@
+components:
+  schemas:
+    Cart:
+      type: object
+      required:
+        - id
+        - owner
+        - price
+        - thumbnail
+      properties:
+        id:
+          type: string
+          description: The auto-generated id of the cart.
+        owner:
+          type: string
+          description: The id of the cart owner
+        price:
+          type: number
+          description: The price of the product.
+        thumbnail:
+          type: string
+          description: The URL of the product thumbnail.
+      example:
+         id: 4ughd7-3658fn-sk85d-h58sk
+         title: desktop computer
+         price: 123.78
+         thumbnail: http://photo.url.png

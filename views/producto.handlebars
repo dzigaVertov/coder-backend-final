@@ -1,0 +1,10 @@
+<h1>Producto: {{producto.title}}</h1>
+
+<div class='card'>{{#each producto}}
+  <p>{{@key}}: {{this}}</p>
+  {{/each}}
+</div>
+
+<button onclick="agregarCarrito('{{producto.id}}')">Agregar al carrito</button>
+
+<script src="/js/producto.js"></script>

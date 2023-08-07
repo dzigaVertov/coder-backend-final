@@ -1,0 +1,15 @@
+<h1>Productos en el carrito</h1>
+
+
+{{#if hayDocs}}
+<ul class='lista'>  
+  {{#each productos}}    
+      <li class='card'>
+        {{#each this}}
+      <p>{{@key}}: {{this}}</p>
+    {{/each}}
+    </li>
+  {{/each}}
+</ul>
+{{/if}}
+

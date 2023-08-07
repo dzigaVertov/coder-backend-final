@@ -1,0 +1,10 @@
+<h1>Perfil de usuario: {{usuario.nombre}}</h1>
+
+<div class='card'>{{#each usuario}}
+  <p>{{@key}}: {{this}}</p>
+  {{/each}}
+</div>
+<button id='logout'>Log Out</button>
+
+
+<script src="js/perfil.js"></script>

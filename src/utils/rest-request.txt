@@ -1,0 +1,263 @@
+# -*- restclient -*-
+#
+# Gets  all Github APIs, formats JSON, shows response status and headers underneath.
+# Also sends a User-Agent header, because the Github API requires this.
+#
+# GET https://api.github.com
+# User-Agent: Emacs Restclient
+
+#
+# XML is supported - highlight, pretty-print
+#
+# GET http://www.redmine.org/issues.xml?limit=10
+
+#
+# It can even show an image!
+#
+# GET http://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png
+#
+# A bit of json GET, you can pass headers too
+#
+# GET http://jira.atlassian.com/rest/api/latest/issue/JRA-9
+# User-Agent: Emacs24
+# Accept-Encoding: compress, gzip
+#
+#
+# Post works too, entity just goes after an empty line. Same is for PUT.
+#
+POST http://localhost:8080/api/products/
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-7789",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+#
+POST http://localhost:8080/api/carts
+Content-Type: application/json
+
+[{
+    "_id" : "6440845bf3838bf718691c24",
+    "quantity": 1
+}]
+
+
+#
+POST http://localhost:8080/api/carts
+Content-Type: application/json
+
+[{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}]
+
+#
+# Post works too, entity just goes after an empty line. Same is for PUT.
+#
+PUT http://localhost:8080/api/products/10
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+#
+#
+
+#
+GET http://localhost:8080/api/products/10
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+#
+#
+#
+#
+GET http://localhost:8080/api/products/10
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+#
+
+GET http://localhost:8080/api/mockingproducts
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+
+GET http://localhost:8080/api/carts
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+#
+#
+GET http://localhost:8080/api/carts
+Content-Type: application/json
+
+{
+        "title": "Este es un título actualizado",
+        "description": "Esta es una descripción de prueba",
+        "code": "codigoprueba-9431",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+
+#
+
+
+#
+POST http://localhost:8080/api/carts
+Content-Type: application/json
+
+{
+        "owner": "6485e259c8f837a11f06e83d"
+}
+
+#
+
+
+POST http://localhost:8080/api/carts/687de0e6-5428-45aa-a41a-c8ad6833b1b4/product/1
+Content-Type: application/json
+
+{
+        "title": "Este es un put de prueba",
+        "description": "Esta es una descripción de put de prueba",
+        "code": "codigoprueba-1098",
+        "price": 179,
+        "status": true,
+        "stock": 200,
+        "category": "categoria",
+        "thumbnails": ["thumb-1", "thumb-2"]
+}
+#
+# And delete, will return not-found error...
+#
+# DELETE https://jira.atlassian.com/rest/api/2/version/20
+
+# # Set a variable to the value of your ip address using a jq expression
+# GET http://httpbin.org/ip
+# -> jq-set-var :my-ip .origin
+
+PUT http://localhost:8080/api/carts/64374e2fdb1b14573aba0c94
+Content-Type: application/json
+
+[
+    {
+    "_id" : "643ddb1edcfb6142f1043459",
+    "quantity": 8
+    },
+    {
+    "_id" : "643ddb2edcfb6142f104345d",
+    "quantity" : 12
+    }
+]
+
+#
+#
+#
+
+PUT http://localhost:8080/api/carts/64374e2fdb1b14573aba0c94/product/643ddb2edcfb6142f104345d
+Content-Type: application/json
+
+{
+    "quantityNueva" : 56
+    }
+#
+#
+#
+#
+
+POST http://localhost:8080/api/carts/644085385b8175e0361c5efe/product/6440943e6a0639c030d40399
+Content-Type: application/json
+
+{
+    "quantityNueva" : 56
+    }
+#
+#
+
+
+DELETE http://localhost:8080/api/carts/64374e2fdb1b14573aba0c94
+Content-Type: application/json
+
+[
+    {
+    "_id" : "643ddb1edcfb6142f1043459",
+    "quantity": 8
+    },
+    {
+    "_id" : "643ddb2edcfb6142f104345d",
+    "quantity" : 12
+    }
+]
+
+#
+#
+#

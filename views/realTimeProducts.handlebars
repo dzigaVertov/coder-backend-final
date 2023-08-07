@@ -1,0 +1,23 @@
+<h1>Productos en tiempo real via Websocket</h1>
+<h2 id='titulo'></h2>
+
+<form id='formulario' action='' method='post'>
+  <input name="Agregar Producto" type="submit" onsubmit="return nuevoProducto()" value="Agregar Producto"/>
+  <label for="title"></label><input type="text" name="title" value="title" />
+  <label for="description"></label><input type="text" name="description" value="description" />
+  <label for="price"></label><input type="text" name="price" value="price" />
+  <label for=" category"></label><input type="text" name="category" value="category" />
+</form>
+
+<div id="contenedorLista">
+<ul class='lista'>  
+  {{#each productos}}    
+    <li class='card'>{{#each this}}
+      <p>{{@key}}: {{this}}</p>
+      {{/each}}
+    </li>
+    {{/each}}
+</ul>
+</div>
+<script  src="socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>

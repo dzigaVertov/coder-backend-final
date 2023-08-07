@@ -1,0 +1,685 @@
+#+title: TO DO Backend
+
+* Cosas a hacer
+
+** Preentregas anteriores
+*** DONE Validaciones y control de errores
+*** DONE Ver video de entrega para ver si faltó algo
+*** DONE Agregar handlebars
+*** DONE Agregar Socket.io
+*** DONE Agregar formulario
+*** DONE Ruta productos
+**** DONE Generar validación para agregar producto: Los types y los obligatorios.
+**** DONE Generar id que no se repita
+**** DONE Generar agregar producto
+**** DONE Hacer ruta put para actualizar producto
+**** DONE Hacer ruta delete para borrar producto
+*** DONE Ruta carts
+**** DONE Crear ruta post con creación de nuevo carrito
+
+
+*** DONE Reemplazar la función callback del manager de productos con un middleware que agregue el socket server a la conexión http
+*** DONE Generar manager dB a partir del productManager
+*** DONE Generar la vista de chat y
+*** DONE la lógica de la aplicación de chat
+*** DONE La vista en tiempo real no actualiza los productos en tiempo real.
+*** DONE Que no permita agregar producto con codigo repetido.
+*** DONE Reemplazar los managers de file por los de mongo
+*** DONE Mejorar la vista de productos
+**** DONE Que no muestre id
+*** DONE Agregar puerto de servidor a través de archivo de configuración.
+*** DONE Pasar lo que esta en servidor.js a los routers
+*** DONE Agregar Router de views de productos
+*** DONE Pasar el manager de productos a los routers
+*** DONE Agregar Readme.md explicando la estructura del proyecto
+*** DONE Cambiar el campo de code de producto por el id???
+
+** Preentrega populate y queries  
+*** DONE Profesionalizar las consultas de productos con filtros, paginación y ordenamientos
+*** DONE Profesionalizar la gestión de carrito para implementar los últimos conceptos vistos.
+*** DONE Con base en nuestra implementación actual de productos, modificar el método GET / para que cumpla con los siguientes puntos:
+**** DONE Deberá poder recibir por query params un limit (opcional), una page (opcional), un sort (opcional) y un query (opcional)
+**** DONE -limit permitirá devolver sólo el número de elementos solicitados al momento de la petición, en caso de no recibir limit, éste será de 10.
+**** DONE page permitirá devolver la página que queremos buscar, en caso de no recibir page, ésta será de 1
+**** DONE query, el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general
+**** DONE sort: asc/desc, para realizar ordenamiento ascendente o descendente por precio, en caso de no recibir sort, no realizar ningún ordenamiento
+*** DONE El método GET deberá devolver un objeto con el siguiente formato:
+ #+begin_src js
+{
+	status:success/error
+    payload: Resultado de los productos solicitados
+    totalPages: Total de páginas
+    prevPage: Página anterior
+    nextPage: Página siguiente
+    page: Página actual
+    hasPrevPage: Indicador para saber si la página previa existe
+    hasNextPage: Indicador para saber si la página siguiente existe.
+    prevLink: Link directo a la página previa (null si hasPrevPage=false)
+    nextLink: Link directo a la página siguiente (null si hasNextPage=false)
+}
+
+
+ #+end_src
+*** DONE Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
+**** TODO Agregar ordenamiento por disponibilidad
+
+*** DONE Además, agregar al router de carts los siguientes endpoints:
+**** DONE DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
+**** DONE PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+**** DONE PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+***** DONE Testear la función que incrementa quantity en los productos de los carts
+**** DONE DELETE api/carts/:cid deberá eliminar todos los productos del carrito 
+**** DONE Esta vez, para el modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. Modificar la ruta /:cid para que al traer todos los productos, los traiga completos mediante un “populate”. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
+*** TODO Crear una vista en el router de views ‘/products’ para visualizar todos los productos con su respectiva paginación. Cada producto mostrado puede resolverse de dos formas:
+**** TODO Llevar a una nueva vista con el producto seleccionado con su descripción completa, detalles de precio, categoría, etc.
+***** DONE Armar view de Producto solo.
+***** DONE Armar router de producto aislado
+***** DONE Poner link a producto solo.
+***** DONE Poner botón de agregar a carrito en producto solo.
+***** TODO Poner botón de agregar a carrito en producto lista.
+**** TODO  Además de un botón para agregar al carrito.
+**** TODO Contar con el botón de “agregar al carrito” directamente, sin necesidad de abrir una página adicional con los detalles del producto.
+*** TODO  Además, agregar una vista en ‘/carts/:cid (cartId) parakd visualizar un carrito específico, donde se deberán listar SOLO los productos que pertenezcan a dicho carrito.   
+**** DONE Agregar view de carrito
+**** DONE desglosar categorías que van en la view
+**** TODO Agregar botón de vaciar carrito
+
+** Preentrega sesiones y login
+
+*** TODO Se levantará un sistema de login completo utilizando router + motor de plantillas Handlebars + base de datos para usuarios y sesiones + 
+
+**** DONE Se deberá contar con una estructura de router para sessions en /api/sessions/ el cual contará con métodos para registrar a un usuario y para su respectivo login
+
+****  Se deberá contar además con un router de vistas en la ruta base / para llevar al formulario de login, de registro y de perfil.
+
+**** DONE El formulario de registro insertará en la base de datos el usuario. El cual deberá contar con:
+
+*****  first_name
+
+*****  last_name
+
+*****  email
+
+*****  age
+
+*****  password
+
+**** DONE Se debe contar con el formulario de login el cual corroborará que el usuario exista en la base, y además genere un objeto user en req.session, indicando que puede utilizar la página.
+
+**** TODO Agregar validaciones a las rutas de vistas para que, si aún no estoy logueado, no pueda entrar a ver mi perfil, y si ya estoy logueado, no pueda volver a loguearme o registrarme.
+
+**** TODO En la vista de perfil, se deben arrojar los datos no sensibles del usuario que se haya logueado.
+
+**** TODO Ajustar nuestro servidor principal para trabajar con un sistema de login.
+
+***** TODO  Deberá contar con todas las vistas realizadas en el hands on lab, 
+
+***** TODO así también como las rutas de router para procesar el registro y el login.
+
+***** TODO  Una vez completado el login, realizar la redirección directamente a la vista de productos.
+
+***** TODO Agregar a la vista de productos un mensaje de bienvenida con los datos del usuario
+
+***** TODO Agregar un sistema de roles, de manera que si colocamos en el login como correo adminCoder@coder.com, y la contraseña adminCod3r123, el usuario de la sesión además tenga un campo 
+
+***** TODO Todos los usuarios que no sean admin deberán contar con un rol “usuario”.
+
+***** TODO Implementar botón de “logout” para destruir la sesión y redirigir a la vista de login
+
+
+
+** Entregable 25-4 Passport Login Github
+
+*** TODO [66%] Con base en el login de nuestro entregable anterior, refactorizar para incluir los nuevos conceptos.
+    
+**** DONE Se deberá contar con un hasheo de contraseña utilizando bcrypt
+
+**** TODO Se deberá contar con una implementación de passport, tanto para register como para login.
+
+***** TODO Devolver error informativo para registro de mail que ya existe
+
+** Entregable 04-05
+
+*** Continuar sobre el proyecto que has trabajado para tu ecommerce y configurar los siguientes elementos:
+    
+**** DONE Crear un modelo User el cual contará con los campos:
+***** first_name:String,
+***** last_name:String,
+***** email:String (único)
+***** age:Number,
+***** password:String(Hash)
+***** cart:Id con referencia a Carts
+***** role:String(default:’user’)
+**** DONE Desarrollar las estrategias de Passport para que funcionen con este modelo de usuarios
+**** DONE Modificar el sistema de login del usuario para poder trabajar con session o con jwt (a tu elección). 
+**** DONE Generar registro con el hash
+***** DONE Login por estrategia local
+***** DONE Generar la ruta de login por estrategia local
+****** DONE En apiSessionsRouter se autentica el usuario con la estrategia
+****** DONE Se recupera el usuario desde la base de datos
+****** DONE Se genera el jwt se lo guarda en la cookie
+****** DONE se responde con la cookie y se manda el usuario
+****** DONE En el javascript cliente se redirige a productos
+***** DONE Respuesta de cookie con jwt para sesion
+**** DONE (Sólo para jwt) desarrollar una estrategia “current” para extraer la cookie que contiene el token para obtener el usuario asociado a dicho token, en caso de tener el token, devolver al usuario asociado al token, caso contrario devolver un error de passport, utilizar un extractor de cookie.
+**** DONE Agregar al router /api/sessions/ la ruta /current, la cual utilizará el modelo de sesión que estés utilizando, para poder devolver en una respuesta el usuario actual.
+** Entregable 23-05
+*** TODO Agregar lógica a botón agregar al carrito
+**** TODO Agregar función agregarAlCarrito en index.js
+**** TODO pasar el pid
+**** TODO Todo lo demás debería ser manejado por la api
+*** TODO Testear middlewares de sesión 
+*** DONE Terminar validaciones productos
+*** DONE Modificar controladores productos
+** Entregable 06-06
+*** DONE Crear modelos
+**** DONE Crear Factory
+**** DONE Crear modelo usuarios
+**** DONE Agregar rol
+**** DONE Agregar validación usuario
+**** DONE Cambiar schema usuario a carpeta DAO
+**** DONE Generar cart de usuario al registrar
+**** DONE Hacer que el repositorio base trabaje con un modelo y no directamente con el DAO
+**** DONE Agregar middleware de rol
+**** TODO Restringir acceso a rutas según rol
+*** DONE Crear modelo Ticket
+*** DONE Agregar validaciones a modelos
+*** TODO Agregar variables de entorno
+*** TODO Crear estrategia /current
+*** Modificar nuestra capa de persistencia para aplicar los conceptos de Factory (opcional), DAO y DTO. 
+*** Se debe entregar:
+**** DONE El DAO seleccionado (por un parámetro en línea de comandos como lo hicimos anteriormente) será devuelto por una Factory para que la capa de negocio opere con él. (Factory puede ser opcional)
+**** DONE Implementar el patrón Repository para trabajar con el DAO en la lógica de negocio. 
+**** TODO Modificar la ruta  /current Para evitar enviar información sensible, enviar un DTO del usuario sólo con la información necesaria.
+**** Realizar un middleware que pueda trabajar en conjunto con la estrategia “current” para hacer un sistema de autorización y delimitar el acceso a dichos endpoints:
+***** DONE Sólo el administrador puede crear, actualizar y eliminar productos.
+***** DONE Sólo el usuario puede enviar mensajes al chat.
+***** DONE Sólo el usuario puede agregar productos a su carrito.
+**** DONE Crear un modelo Ticket el cual contará con todas las formalizaciones de la compra. Éste contará con los campos
+***** Id (autogenerado por mongo)
+***** code: String debe autogenerarse y ser único
+***** purchase_datetime: Deberá guardar la fecha y hora exacta en la cual se formalizó la compra (básicamente es un created_at)
+***** amount: Number, total de la compra.
+***** purchaser: String, contendrá el correo del usuario asociado al carrito.
+**** Implementar, en el router de carts, la ruta /:cid/purchase, la cual permitirá finalizar el proceso de compra de dicho carrito.
+***** DONE La compra debe corroborar el stock del producto al momento de finalizarse
+***** DONE Si el producto tiene suficiente stock para la cantidad indicada en el producto del carrito, entonces restarlo del stock del producto y continuar.
+***** DONE Si el producto no tiene suficiente stock para la cantidad indicada en el producto del carrito, entonces no agregar el producto al proceso de compra. 
+***** DONE Al final, utilizar el servicio de Tickets para poder generar un ticket con los datos de la compra.
+***** DONE En caso de existir una compra no completada, devolver el arreglo con los ids de los productos que no pudieron procesarse.
+***** DONE Una vez finalizada la compra, el carrito asociado al usuario que compró deberá contener sólo los productos que no pudieron comprarse. Es decir, se filtran los que sí se compraron y se quedan aquellos que no tenían disponibilidad.
+** DONE Entregable 20/06 - Implementación de logger
+*** DONE Primero, definir un sistema de niveles que tenga la siguiente prioridad (de menor a mayor):
+**** debug, http, info, warning, error, fatal
+*** DONE Después implementar un logger para desarrollo y un logger para producción, el logger de desarrollo deberá loggear a partir del nivel debug, sólo en consola
+*** DONE Sin embargo, el logger del entorno productivo debería loggear sólo a partir de nivel info.
+*** DONE Además, el logger deberá enviar en un transporte de archivos a partir del nivel de error en un nombre “errors.log”
+*** DONE Agregar logs de valor alto en los puntos importantes de tu servidor (errores, advertencias, etc) y modificar los console.log() habituales que tenemos para que muestren todo a partir de winston.
+*** DONE Crear un endpoint /loggerTest que permita probar todos los logs
+**** DONE Se revisará que la estructura del servidor en general esté implementada con el logger de winston.
+**** DONE Se ejecutará el proyecto en entorno de desarrollo y entorno productivo para corroborar que se implementen los diferentes loggers según el entorno.
+**** DONE Se probará un endpoint (proporcionado por el alumno). para revisar que los logs se escriban correctamente, tanto para consola (desarrollo) como para consola y archivos (productivo).
+
+** Nuevo entregable
+*** DONE Hacer estrategia de rol
+*** DONE restringir vista carrito a usuario logueado
+*** DONE Restringir agregado de productos a admin
+*** DONE Hacer chequeo general del proyecto:
+**** DONE Agregar variables de entorno
+**** DONE Chequear que la separación en capas incluya todo el proyecto
+
+** Tercera práctica integradora
+
+*** DONE Realizar un sistema de recuperación de contraseña, la cual envíe por medio de un correo un botón que redireccione a una página para restablecer la contraseña (no recuperarla).
+
+**** DONE link del correo debe expirar después de 1 hora de enviado.
+
+**** DONE Si se trata de restablecer la contraseña con la misma contraseña del usuario, debe impedirlo e indicarle que no se puede colocar la misma contraseña
+
+**** DONE Si el link expiró, debe redirigir a una vista que le permita generar nuevamente el correo de restablecimiento, el cual contará con una nueva duración de 1 hora.
+
+**** TODO Mejorar el mecanismo de redirección por la contraseña repetida
+
+*** TODO  Establecer un nuevo rol para el schema del usuario llamado “premium” el cual estará habilitado también para crear productos
+
+**** TODO  Modificar el schema de producto para contar con un campo “owner”, el cual haga referencia a la persona que creó el producto
+
+**** TODO  Si un producto se crea sin owner, se debe colocar por defecto “admin”.
+
+**** TODO  El campo owner deberá guardar sólo el correo electrónico (o _id, lo dejamos a tu conveniencia) del usuario que lo haya creado (Sólo podrá recibir usuarios premium)
+
+*** TODO Modificar los permisos de modificación y eliminación de productos para que:
+
+**** TODO  Un usuario premium sólo pueda borrar los productos que le pertenecen.
+
+**** TODO El admin pueda borrar cualquier producto, aún si es de un owner.
+
+**** TODO Además, modificar la lógica de carrito para que un usuario premium NO pueda agregar a su carrito un producto que le pertenece
+
+**** TODO  Implementar una nueva ruta en el router de api/users, la cual será /api/users/premium/:uid  la cual permitirá cambiar el rol de un usuario, de “user” a “premium” y viceversa.
+
+
+** Entrega final
+
+*** DONE Pasar el código de productsController a un servicio.
+
+*** TODO Cambiar el repositorio de productos al repositorio base.
+
+*** TODO Borrar código de sockets
+
+*** DONE Agregar validación a queries;
+
+*** TODO Uniformar los nombres de archivos
+
+*** TODO Pasar los daos a herencia?
+
+*** DONE Separar código de tests en distintos archivos
+
+*** TODO Hacer tests de carts
+
+*** TODO HAcer tests de tickets?
+
+* Notas
+
+** Clase 16 mongo avanzado I
+
+*** Profiling - Execution stats
+
+**** response = userModel.find({first_name: 'Celia'}).explain('executionStats')
+Información acerca de los tiempos y estrategias de búsqueda.
+
+***** response['executionStats']['executionTimeMillis']
+***** response['queryPlanner']['winningPlan']
+*** Indexing
+**** const userSchema = new Schema({first_name: {type: String, index: true}})
+*** Populate en mongoose (join en SQL, lookUp en mongo)
+#+begin_src js
+// Modelo de estudiantes
+const studentSchema = new Schema({
+    first_name: String,
+    last_name: String,
+    email: String,
+    gender: String,
+    courses: {
+        type: [
+            {
+                course: {
+                    type: Schema.Types.ObjectId, // Acá va el id del curso
+                    ref: 'courses'               // referencia a la otra colección 
+                }
+            }
+        ],
+        default: [], 
+    },
+})
+
+studentSchema.pre(/^find/, function (next) {
+    this.populate('courses.course')
+    next()
+})
+
+const studentModel = model(studentCollection, studentSchema)
+
+// Modelo de cursos
+const courseCollection = 'courses'
+
+const courseSchema = new Schema({
+    title: String,
+    description: String,
+    difficulty: Number,
+    topics: { type: Array, default: [] },
+    professor: String,
+})
+
+const courseModel = model(courseCollection, courseSchema)
+
+
+#+end_src
+**** save en mongoose
+#+begin_src js
+const student = await studentModel.findById('642c38727a926244bbb71395')
+if (student) {
+    
+    @ts-ignore
+    student.courses.push({ course: '642c38a1c7932f85cdda513e' })
+    // guardo las modificaciones a 'student.courses'
+    await studentModel.replaceOne({ _id: '642c38727a926244bbb71395' }, student)
+
+// mongoose tambien me permite hacerlo así!!! 
+    await student?.save()
+}
+// o tambien.....
+await studentModel.updateOne({ _id: '642c3b30f4b560d9f02d33ea' }, { $push: { courses: { course: new mongoose.Types.ObjectId('642c38a1c7932f85cdda513e') } } })
+
+#+end_src
+**** 
+
+** Clase 17 mongo avanzado II
+
+*** Aggregation pipeline
+#+begin_src js
+let orders = await orderModel.aggregate([
+    // me quedo con las pizzas medianas
+    { $match: { size: 'medium' } },
+
+    // agrupo por variedad, y acumulo las cantidades de cada variedad
+    { $group: { _id: '$name', totalQuantity: { $sum: '$quantity' } } },
+
+    // ordeno por cantidad, de mayor a menor
+    { $sort: { totalQuantity: -1 } },
+
+    // meto todos los resultados en un array 'ordenes' (es obligatorio ponerle un _id)
+    // { $group: { _id: 1, orders: { $push: { _id: '$_id', totalQuantity: '$totalQuantity' } } } },
+    { $group: { _id: 1, orders: { $push: '$$ROOT' } } }, // esto es lo mismo pero mas corto!
+
+    // le saco el _id para el resultado final
+    { $project: { _id: 0 } },
+
+    // inserto en la coleccion de reportes (esto le agregará su propio _id autogenerado)
+    { $merge: { into: 'reports' } }
+])
+#+end_src
+
+** Clase 18 cookies, Sessions y Storages
+
+*** Cookies
+- Un pequeño archivo de texto
+- Almacenamiento del servidor distribuido del lado de los clientes.
+- Se guardan por ej:
+  - Nombre de usuario
+  - IDs de sesiones
+  - Preferencias de navegación
+- Librería que se usa:
+  - Cookie-parser
+    - Agrega las cookies en el objeto request
+    - Las cookies se agregan automáticamente del lado del cliente y siempre se envían al sitio del que se recibieron originalmente.
+    - app.use(cookieParser()) cookieParser es una función que devuelve un middleware.
+    - req.cookies
+  - Se agrega una cookie a la respuesta con:
+    - res.cookie('nombre', valor)
+- Para borrar una cookie:
+  - res.clearCookie(cookieName)
+  - Tienen que enviarse todas las opciones que se usaron al momento de crearla.
+
+#+begin_src js
+
+app.get('/setRegular', (req, res) => {
+  res.status(200)
+  res.cookie('regular', 'cookie') // esto es lo que agrego para mandar una cookie al cliente
+  res.send('la cookie fue guardada con éxito')
+})
+
+app.get('/setPath', (req, res) => {
+  res.cookie('conPath', 'cookie', { path: '/conPath' }) // La cookie sólo se incluye en las peticiones a ese path
+  res.send('Set Cookie')
+})
+
+app.get('/setJSON', (req, res) => {
+  res.cookie('json', { tipo: 'cookie', nombre: 'cuqui' }) // cookie con json
+  res.send('Set Json Cookie')
+})
+
+app.get('/setEX', (req, res) => {
+  res.cookie('expirable', 'cookie', { maxAge: 15000 }) // cookie con timeOut se borra automáticamente
+  res.send('Set Exp Cookie')
+})
+
+// /////////////////////////////////
+app.use(cookieParser('papaFrita')) // palabra o array de palabras que se usa para firmar la cookie
+app.get('/setSigned', (req, res) => {
+  res.cookie('signed', 'cookie', { signed: true }) // firma la cookie 
+  res.send('Set Signed Cookie')
+})
+// //////////////////////////////////////
+
+app.get('/setHttpOnly', (req, res) => {
+  res.cookie('soloPeticiones', 'valorLoco', { httpOnly: true })
+  res.send('Set httpOnly Cookie')
+})
+
+app.get('/get', (req, res) => {
+  res.json({ notSigned: req.cookies, signed: req.signedCookies })
+})
+
+#+end_src
+
+- 
+
+*** Sessions
+
+**** session
+
+     - usamos el package express-session para generar sesiones
+     - Genera sesiones usando cookies
+       #+begin_src js
+
+app.use(session({
+  secret: 'shhhhhhhhhhhhhhhhhhhhh',
+  resave: false,
+  saveUninitialized: true
+}))
+
+req.session.destroy(callback(error)) // termina la sesión
+       #+end_src
+
+** Clase 19 cookies, Sessions y Storages 2
+
+*** Persistencia por File store
+#+begin_src js
+  
+/* ----------------------------------------------------- */
+/*           Persistencia por file store                 */
+/* ----------------------------------------------------- */
+import sfs from 'session-file-store'
+const FileStore = sfs(session)
+/* ----------------------------------------------------- */
+
+const app = express()
+app.use(
+  session({
+
+    /* ----------------------------------------------------- */
+    /*           Persistencia por file store                 */
+      /* ----------------------------------------------------- */
+      // ttl: persistencia de la sesión en segundos.  Cuando la sesión expira
+      // el archivo no se borra automáticamente
+    store: new FileStore({ path: './sesiones', ttl: 300, retries: 0 }),
+    /* ----------------------------------------------------- */
+
+    secret: 'shhhhhhhhhhhhhhhhhhhhh',
+    resave: false,
+    saveUninitialized: false,   // No guarda la sesión hasta que no está modificada
+    // cookie: {
+    //     maxAge: 40000
+    // }
+  })
+)
+
+#+end_src
+
+*** Persistencia por Mongo Atlas
+
+#+begin_src js
+
+/* ------------------------------------------------*/
+/*           Persistencia por MongoDB              */
+/* ------------------------------------------------*/
+import MongoStore from 'connect-mongo'
+/* ------------------------------------------------*/
+
+const app = express()
+
+app.use(session({
+    /* ----------------------------------------------------- */
+    /*           Persistencia por redis database             */
+    /* ----------------------------------------------------- */
+    store: MongoStore.create({ mongoUrl: `mongodb://localhost/coderhouse`, ttl: 10 }), // la base de datos gestiona automáticamente la persistencia de los documentos borrándolos cuando expira la sesión
+    /* ----------------------------------------------------- */
+
+    secret: 'shhhhhhhhhhhhhhhhhhhhh',
+    resave: false,
+    saveUninitialized: false
+}))
+  
+#+end_src
+
+** Clase 20 Autorización y autorización
+*** Bcrypt: librería para generar hashes
+#+begin_src js
+  
+// irreversible!
+export function hashear(frase) {
+    return bcrypt.hashSync(frase, bcrypt.genSaltSync(10))
+}
+
+export function validarQueSeanIguales(recibida, almacenada) {
+  // return hashear(recibida) === almacenada
+  return bcrypt.compareSync(recibida, almacenada)
+}
+#+end_src
+
+
+*** Passport
+**** Estrategias: Maneras de realizar la autenticación
+***** Local: se realiza la comparación de las contraseñas contra unas credenciales almacenadas de forma local.  
+**** Autenticación: Identificación de quien se presenta a un servidor - Código de procesos fallidos: 401
+***** Usuario y contraseña
+***** Por terceros: autenticación por otro sistema (Google, Facebook, etcétera)
+***** Datos biométricos
+***** JWT: Json Web Token
+***** OAuth: Api de autenticación
+
+**** Autorización: Permisos para acceder a distintos niveles de recursos.- Código de procesos fallidos: 403
+
+**** Genera middlewares de Express
+#+begin_src js
+  // acá cargo passport en el servidor express como middleware
+app.use(passportInitialize, passportSession)
+
+#+end_src
+
+**** Ejemplos de estrategias:
+#+begin_src js
+  passport.use('register', new Strategy({ passReqToCallback: true }, async (req, _u, _p, done) => {
+    // esto es lo que estaba en el controller de registro
+      const { username, password, ...datosPersonales } = req.body
+    const user = new User({ username, password: hashear(password), ...datosPersonales })
+    await userManager.guardar(user)
+    done(null, {
+        username: user.username,
+        nombre: user.nombre,
+        apellido: user.apellido,
+        edad: user.edad,
+        direccion: user.direccion,
+    })
+}))
+
+passport.use('login', new Strategy({ passReqToCallback: true }, async (req, _u, _p, done) => {
+    // esto es lo que estaba en el controller de login
+    const { username, password } = req.body
+    let buscado
+    try {
+        buscado = await userManager.buscarPorUsername(username)
+    } catch (error) {
+        return done(new ErrorDeAutenticacion())
+    }
+    if (!validarQueSeanIguales(password, buscado.password))
+        return done(new ErrorDeAutenticacion())
+    done(null, {
+        username: buscado.username,
+        nombre: buscado.nombre,
+        apellido: buscado.apellido,
+        edad: buscado.edad,
+        direccion: buscado.direccion,
+    })
+}))
+
+// esto lo tengo que agregar para que funcione passport! copiar y pegar, nada mas.
+passport.serializeUser((user, next) => { next(null, user) })
+passport.deserializeUser((user, next) => { next(null, user) })
+
+export const passportInitialize = passport.initialize()
+export const passportSession = passport.session()
+
+#+end_src
+
+**** Logout
+Passport crea una función logout en el objeto request para facilitar la destrucción de la sesión.
+#+begin_src js
+
+export async function logoutController(req, res, next) {
+    // lo que estaba acá lo reemplacé por el atajo que me provee passport
+    req.logout(err => {
+        res.sendStatus(200)
+    })
+}
+
+#+end_src
+
+** Clase 21 Autenticación por terceros
+*** Login a través de Githubt
+**** Strategy
+La passport.authenticate toma una Strategy y devuelve un middleware
+#+begin_src js
+import { Strategy as GithubStrategy } from 'passport-github2'
+import { githubCallbackUrl, githubClientSecret, githubClienteId } from '../config/auth.config.js'
+import { User } from '../entidades/User.js'
+
+
+
+passport.use('github', new GithubStrategy({
+    clientID: githubClienteId,
+    clientSecret: githubClientSecret,
+    callbackURL: githubCallbackUrl
+}, async (accessToken, refreshToken, profile, done) => {
+    console.log(profile)
+    let user
+    try {
+        user = await usersManager.buscarPorEmail(profile.username)
+    } catch (error) {
+        // @ts-ignore
+        user = new User({
+            email: profile.username,
+        })
+        await usersManager.guardar(user)
+    }
+    done(null, user)
+}))
+
+// esto lo tengo que agregar para que funcione passport! copiar y pegar, nada mas.
+passport.serializeUser((user, next) => { next(null, user) })
+passport.deserializeUser((user, next) => { next(null, user) })
+
+// estos son para cargar en express como middlewares a nivel aplicacion
+export const passportInitialize = passport.initialize()
+export const passportSession = passport.session()
+
+// estos son para cargar como middlewares antes de los controladores correspondientes
+export const autenticacionPorGithub = passport.authenticate('github', { scope: ['user:email'] })
+export const antenticacionPorGithub_CB = passport.authenticate('github', { failWithError: true })
+
+#+end_src
+
+**** Middlewares para routers
+#+begin_src js
+  
+// login con github
+// Hay que poner las dos rutas: una para hacer el pedido de autenticación a Github y otra para el callback de github
+sessionsRouter.get('/github', autenticacionPorGithub)
+sessionsRouter.get('/githubcallback', antenticacionPorGithub_CB, (req, res, next) => { res.redirect('/') })
+
+// logout
+sessionsRouter.post('/logout', logoutSessionsController)
+
+#+end_src
+
+** Clase 22 Passport avanzado
+
+*** JWT
+
+** Clase 23 Ruteo avanzado
+
+*** Validación de parámetros
+
+**** Expresiones regulares para las rutas y parámetros
+
