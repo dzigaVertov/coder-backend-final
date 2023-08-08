@@ -10,7 +10,7 @@ export default apiCartsRouter;
 
 apiCartsRouter.get('/', autenticarJwtApi, soloRol('admin'), apiCartsController.getHandler);
 
-apiCartsRouter.post('/', apiCartsController.postHandler);
+apiCartsRouter.post('/', autenticarJwtApi, soloCartDeUsuarioOadmin(), apiCartsController.postHandler);
 
 apiCartsRouter.get('/:cid', soloCartDeUsuarioOadmin(), apiCartsController.getCidHandler);
 
@@ -18,10 +18,10 @@ apiCartsRouter.get('/:cid/purchase', soloCartDeUsuarioOadmin(), purchaseControll
 
 apiCartsRouter.put('/:cid', soloCartDeUsuarioOadmin(), apiCartsController.putCidHandler);
 
-apiCartsRouter.post('/:cid/product/:pid',soloCartDeUsuarioOadmin(), apiCartsController.postProductHandler);
+apiCartsRouter.post('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.postProductHandler);
 
-apiCartsRouter.put('/:cid/product/:pid',soloCartDeUsuarioOadmin(),apiCartsController.putProductQuantityHandler);
+apiCartsRouter.put('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.putProductQuantityHandler);
 
-apiCartsRouter.delete('/:cid/product/:pid',soloCartDeUsuarioOadmin(), apiCartsController.deleteProductHandler);
+apiCartsRouter.delete('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.deleteProductHandler);
 
 apiCartsRouter.delete('/:cid', soloCartDeUsuarioOadmin(), apiCartsController.vaciarCarritoHandler);

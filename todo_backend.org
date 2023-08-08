@@ -261,6 +261,7 @@
 
 ** Entrega final
 
+*** DONE Crear nuevo repositorio para entrega final
 *** DONE Pasar el código de productsController a un servicio.
 
 *** TODO Cambiar el repositorio de productos al repositorio base.
@@ -275,6 +276,9 @@
 
 *** DONE Separar código de tests en distintos archivos
 
+*** TODO Pasar código de carts a Sevicios
+**** DONE Hacer que no se pueda crear más de un cart por usuario
+*** TODO Hacer que sólo se pueda crear cart si es el usuario logueado o admin
 *** TODO Hacer tests de carts
 
 *** TODO HAcer tests de tickets?

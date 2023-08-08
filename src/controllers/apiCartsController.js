@@ -1,8 +1,9 @@
 import { cartRepository } from '../repositories/cartRepository.js';
+import { cartService } from '../services/cartService.js';
 
 export async function getHandler(req, res, next) {
     try {
-        const carts = await cartRepository.getCarts();
+        const carts = await cartService.obtenerListaCarts();
         res.json(carts);
     } catch (error) {
         next(error);
@@ -12,8 +13,8 @@ export async function getHandler(req, res, next) {
 export async function postHandler(req, res, next) {
     const { owner } = req.body;
     try {
-        const nuevoCart = await cartRepository.create(owner);
-        res.json(nuevoCart);
+        const nuevoCart = await cartService.crearCart(owner);
+        res.status(201).json(nuevoCart);
     } catch (error) {
         next(error);
     }

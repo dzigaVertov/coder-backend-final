@@ -6,7 +6,7 @@ class CartManagerMongo {
     #db;
     constructor() {
         this.#db = cartModel;
-        logger.debug('DAO de Carts creado')
+        logger.debug('DAO de Carts creado');
     }
 
     async create(cartData) {
@@ -78,6 +78,10 @@ class CartManagerMongo {
     async deleteProductFromCart(idCart, idProducto) {
         return this.#db.updateOne({ id: idCart },
             { $pullAll: { "productos": [{ id: idProducto }] } });
+    }
+
+    async deleteMany(query) {
+        return await this.#db.deleteMany(query);
     }
 
 
