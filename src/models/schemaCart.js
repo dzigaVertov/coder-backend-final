@@ -1,28 +1,36 @@
 import mongoose, { Schema, model } from 'mongoose';
 const cartsCollection = 'carts';
 
+const schemaCartProd = new mongoose.Schema({
+
+    id: {
+        type: String,
+        required: true
+    },
+    quantity: { type: Number, required: true }
+});
+
+schemaCartProd.virtual('producto', {
+    ref: 'productos',
+    localField: 'id',
+    foreignField: 'id',
+    justOne: true
+});
+
 const schemaCart = new mongoose.Schema(
     {
-        productos: [
-            {
-                _id: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'productos'
-                },
-                quantity: { type: Number, required: true }
-            }
-        ],
-        cartOwner: {
-            type: String,
-            ref: 'usuarios'
-        },
+        productos: [schemaCartProd],
+        cartOwner: String,
         id: { type: String, required: true }
     },
     { versionKey: false }
 );
 
+schemaCartProd.set('toObject', { virtuals: true });
+schemaCartProd.set('toJSON', { virtuals: true });
+
 schemaCart.pre(/^find/, function (next) {
-    this.populate('productos._id');
+    this.populate('productos.producto', '-_id');
     next();
 });
 

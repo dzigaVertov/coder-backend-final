@@ -126,7 +126,8 @@ export const USUARIO_TEST_2 = {
         age: 75,
         role: 'user',
         password: '123',
-        id: 'abc23-asgge34'
+        id: 'abc23-asgge34',
+        cart: 'sd342lskdf23jsdf3j'
     },
     rolIncorrecto: {
         first_name: 'Bruno',

@@ -46,7 +46,7 @@ export class BaseRepository {
         return await this.#dao.updateMany(query, newData);
     }
 
-    async deleteOne(query, options) {
+     async deleteOne(query, options) {
         return await this.#dao.deleteOne(query);
     }
 

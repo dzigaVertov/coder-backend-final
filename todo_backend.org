@@ -263,7 +263,20 @@
 
 *** DONE Crear nuevo repositorio para entrega final
 *** DONE Pasar el código de productsController a un servicio.
-
+*** TODO Arreglar código de Carts
+**** TODO LIMPIAR TODO EL CODIGO DE DEBUG DE LA RUTA PUT /api/carts/:cid
+**** TODO Decidir sobre la api de Carts
+***** TODO Va a haber un put /api/carts/:cid que sea para reemplazar el array total de productos, que va a ser con un body de ids y cantidades, devuelve el cart completo actualizado.
+***** TODO Va a haber un put a /api/carts/:cid/products/:pid que actualiza la cantidad de ese producto
+***** TODO Va a haber un delete en /api/carts/:cid/products/:pid para borrar el producto.
+***** TODO Va a haber un delete en /api/carts/:cid para vaciar el carrito
+****** TODO En el router se pasan los datos al controller
+****** TODO En el controller se envía el array de productos y el id del cart al servicio.
+****** TODO En el cart de servicio de envían los datos al repositorio. 
+****** TODO En el repositorio se validan los datos y se envían al dao.
+****** TODO En el DAO se actualizan los datos del array de productos. 
+***** TODO Va a haber un delete para remover un cierto producto del carrito totalmente. Devuelve el carrito completo actualizado.
+***** TODO Las peticiones en el body van a contener un array de tuples (id, cantidad), que serán validadas en el repositorio.
 *** TODO Cambiar el repositorio de productos al repositorio base.
 
 *** TODO Borrar código de sockets
@@ -278,7 +291,8 @@
 
 *** TODO Pasar código de carts a Sevicios
 **** DONE Hacer que no se pueda crear más de un cart por usuario
-*** TODO Hacer que sólo se pueda crear cart si es el usuario logueado o admin
+*** DONE Hacer que sólo se pueda crear cart si es el usuario logueado o admin
+*** TODO Arreglar repositorio de carts
 *** TODO Hacer tests de carts
 
 *** TODO HAcer tests de tickets?

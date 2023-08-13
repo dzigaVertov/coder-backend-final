@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
+import { InvalidArgumentError } from '../models/errors/InvalidArgument.error.js';
+import {NotFoundError} from '../models/errors/NotFound.error.js';
 import cartModel from '../models/schemaCart.js';
 import { logger } from '../utils/logger.js';
 import { toPojo } from '../utils/topojo.js';
+
 class CartManagerMongo {
     #db;
     constructor() {
@@ -34,19 +37,27 @@ class CartManagerMongo {
     }
 
     async updateProductos(idCart, productos) {
-        // TODO: Arreglar esto
-        return this.#db.findByIdAndUpdate(idCart, { productos: productos });
+        const actualizado = await this.#db.findOneAndUpdate({ id: idCart }, { productos: productos.products }, { new: true })
+            .select({ _id: 0 })
+            .select({ 'productos.producto._id': 0 })
+              .select({ 'productos._id': 0 }).lean();
+
+        // Chequear que todos los productos estén incluidos en la base
+        if (!actualizado.productos.every(x=> x.producto)){
+            throw new NotFoundError('Producto no encontrado en la base de datos');
+        }
+        
+        return actualizado;
     }
 
     async updateProductQuantity(idCart, id_producto, quantity) {
-        let prueba = this.#db.findOneAndUpdate({
+        let updated = this.#db.findOneAndUpdate({
             id: idCart,
             productos: { $elemMatch: { id: id_producto } }
         },
             { $inc: { 'productos.$.quantity': quantity } });
 
-        console.log(prueba);
-        return prueba;
+        return updated;
     }
 
     async addProductoToCart(idCart, idProducto) {

@@ -7,3 +7,6 @@
 /testDebug.log
 /todo_backend.org~
 /test/apiRest/api.carts.test.js~
+/src/mocks/cartMock.js~
+/src/models/CartProductArrayModel.js~
+/src/models/CartProductModel.js~

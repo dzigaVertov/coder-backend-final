@@ -73,3 +73,18 @@ export async function getUserController(req, res, next) {
     }
 
 }
+
+export async function putUserController(req, res, next) {
+    try {
+        const camposAcambiar = req.body;
+        const userId = req.user.id;
+        const userActualizado = userService.actualizarUsuario(userId, camposAcambiar);
+        res.status(200).json(userActualizado);
+
+    } catch (error) {
+        req.logger.error(`Error: ${error.message} atrapado en putUserController `);
+        next(error);
+
+    }
+
+}

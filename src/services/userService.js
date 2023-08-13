@@ -35,8 +35,12 @@ class UserService {
         const newPassHasheado = hashear(newPass);
         const updated = await usersRepository.updateOne({ email: user.email }, { password: newPassHasheado });
         logger.debug('Password actualizado en UserService');
-        console.log('updated: ', updated);
         return updated;
+    }
+
+    async actualizarUsuario(userId, camposAcambiar) {
+        const userActualizado = await usersRepository.updateOne({ id: userId }, camposAcambiar);
+        return userActualizado;
     }
 
 }

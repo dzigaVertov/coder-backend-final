@@ -20,11 +20,11 @@ export async function postHandler(req, res, next) {
     }
 }
 
-export async function getCidHandler(req, res, next) {
+export async function getCartDeUsuarioHandler(req, res, next) {
     try {
-        const cid = req.params.cid;
-        const cart = await cartRepository.readOne({ _id: cid });
-        res.json(cart);
+        const userId = req.user.id;
+        const cart = await cartService.obtenerCartDeUsuario(userId);
+        res.status(200).json(cart);
     } catch (error) {
         next(error);
     }
@@ -34,8 +34,8 @@ export async function putCidHandler(req, res, next) {
     try {
         let cartId = req.params.cid;
         let productos = req.body;
-        let cart = await cartRepository.updateProductos(cartId, productos);
-        res.json(cart);
+        let cartActualizado = await cartService.actualizarProductos(cartId, productos);
+        res.status(201).json(cartActualizado);
 
     } catch (error) {
         next(error);

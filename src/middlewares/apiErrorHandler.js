@@ -21,6 +21,7 @@ export async function apiErrorHandler(error, req, res, next) {
             res.status(401).json({ message: 'Not logged in' });
             return;
         default:
+            console.log('este es el error: ', error);
             res.status(401).json({ estado: 'error', tipo: error.tipo, descripcion: error.description });
 
 

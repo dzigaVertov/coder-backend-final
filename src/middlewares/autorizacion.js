@@ -21,6 +21,18 @@ export function soloCartDeUsuarioOadmin() {
     return middlewareCartUsuario;
 }
 
+export function soloCreaCartPropioUsuarioOadmin() {
+    function middlewareCartUsuario(req, res, next) {
+        const { owner } = req.body;
+        if (req.user.role === 'admin') return next();
+        if (req.user.id === owner) return next();
+
+        return next(new Error('Error de autorización'));
+    }
+    return middlewareCartUsuario;
+}
+
+
 export function soloLogueado(req, res, next) {
     try {
         if (!req.isAuthenticated()) {

@@ -1,6 +1,7 @@
 import { BaseRepository } from './baseRepository.js';
 import { cartsDao } from '../DAO/persistenciaFactory.js';
 import { Cart } from '../models/cartModel.js';
+import { CartProductArrayModel } from '../models/CartProductArrayModel.js';
 
 
 class CartRepository extends BaseRepository {
@@ -9,11 +10,13 @@ class CartRepository extends BaseRepository {
     }
 
     async getCarts() {
-        super.dao.getCarts();
+        this.dao.getCarts();
     }
 
-    async updateProductos(cartId, productos) {
-        let cartActualizado = await super.dao.updateProductos(cartId, productos);
+    async updateProductos(cartId, productos) {     
+        const productosValidados = new CartProductArrayModel(productos);
+
+        let cartActualizado = await this.dao.updateProductos(cartId, productosValidados);
         return cartActualizado;
     }
 
@@ -32,7 +35,7 @@ class CartRepository extends BaseRepository {
         return carritoActualizado;
     }
 
-    async vaciarCarrito(cartId){
+    async vaciarCarrito(cartId) {
         let carritoActualizado = await super.dao.updateProductos(cartId, []);
         return carritoActualizado;
     }

@@ -13,11 +13,11 @@ describe('api rest', () => {
     describe('/api/users', () => {
 
         beforeEach(async () => {
-            const result = await usersDaoMongoose.deleteMany({});
+            await usersDaoMongoose.deleteMany({});
         });
 
         afterEach(async () => {
-            const result = await usersDaoMongoose.deleteMany({});
+            await usersDaoMongoose.deleteMany({});
         });
 
         describe('POST', () => {
@@ -42,7 +42,11 @@ describe('api rest', () => {
         describe('GET userId', () => {
             beforeEach(async () => {
                 const datosUsuario = USUARIO_TEST.inputCorrecto;
-                const resultado = await usersDaoMongoose.create(datosUsuario);
+                await usersDaoMongoose.create(datosUsuario);
+            });
+
+            afterEach(async () => {
+                await usersDaoMongoose.deleteMany({});
             });
             describe('Envío de petición con id en req params:', () => {
                 it('Devuelve dto de usuario y statusCode 200', async () => {
@@ -51,6 +55,22 @@ describe('api rest', () => {
                     assert.equal(response.statusCode, 200);
                     assert.deepEqual(response.body, USUARIO_TEST.datos);
                 });
+            });
+
+        });
+
+        describe('PUT', () => {
+            beforeEach(async () => {
+                const datosUsuario = USUARIO_TEST.inputCorrecto;
+                await usersDaoMongoose.create(datosUsuario);
+            });
+
+            afterEach(async () => {
+                await usersDaoMongoose.deleteMany({});
+            });
+
+            it('Actualiza campos del usuario logueado, devuelve datos actualizados, status 200',async ()=>{
+                
             });
 
         });

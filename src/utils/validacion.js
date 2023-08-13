@@ -1,10 +1,18 @@
 import { InvalidArgumentError } from "../models/errors/InvalidArgument.error.js";
 import { stockOptions } from '../models/busquedaOptions.js';
+
 export function esArray(value) {
     if (value instanceof Array) {
         return value;
     }
     throw new InvalidArgumentError('No es array');
+}
+
+export function esString(value) {
+    const correcto = typeof value === 'string' || value instanceof String;
+    if (!correcto) throw new InvalidArgumentError('El dato debe ser un string');
+
+    return value;
 }
 
 export function noVacio(value) {

@@ -18,6 +18,7 @@ describe('api rest', () => {
         let cookieUser;
         let productoEnDb;
         async function loguearUsuarios() {
+            console.log('en otro loguear');
             // Crear un usuario admin para postear productos
             const passHasheado = hashear(USUARIO_TEST.inputCorrecto.password);
             const userTestAdmin = { ...USUARIO_TEST.inputCorrecto, role: 'admin', password: passHasheado };
