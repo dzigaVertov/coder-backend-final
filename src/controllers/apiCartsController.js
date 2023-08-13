@@ -47,8 +47,8 @@ export async function postProductHandler(req, res, next) {
     let idCarrito = req.params.cid;
     let codigoProducto = req.params.pid;
     try {
-        let carritoActualizado = await cartRepository.addProducto(idCarrito, codigoProducto);
-        res.json(carritoActualizado);
+        const carritoActualizado = await cartService.agregarProductoAlCart(idCarrito, codigoProducto);
+        res.status(201).json(carritoActualizado);
 
     } catch (error) {
         next(error);
@@ -61,9 +61,9 @@ export async function putProductQuantityHandler(req, res, next) {
     try {
         let idCarrito = req.params.cid;
         let idProducto = req.params.pid;
-        let { quantityNueva } = req.body;
-        let carritoActualizado = await cartRepository.updateProdQuantity(idCarrito, idProducto, quantityNueva);
-        res.json(carritoActualizado);
+        let { quantity } = req.body;
+        let carritoActualizado = await cartRepository.updateProdQuantity(idCarrito, idProducto, quantity);
+        res.status(201).json(carritoActualizado);
     } catch (error) {
         next(error);
     }

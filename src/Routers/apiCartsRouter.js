@@ -8,22 +8,37 @@ let apiCartsRouter = Router();
 export default apiCartsRouter;
 
 
-apiCartsRouter.get('/allcarts', autenticarJwtApi, soloRol('admin'), apiCartsController.getHandler);
+apiCartsRouter.get('/allcarts',
+    autenticarJwtApi,
+    soloRol('admin'),
+    apiCartsController.getHandler);
 
-apiCartsRouter.post('/', autenticarJwtApi, soloCreaCartPropioUsuarioOadmin(), apiCartsController.postHandler);
+apiCartsRouter.post('/',
+    autenticarJwtApi,
+    soloCreaCartPropioUsuarioOadmin(),
+    apiCartsController.postHandler);
 
-apiCartsRouter.get('/', autenticarJwtApi, apiCartsController.getCartDeUsuarioHandler);
+apiCartsRouter.get('/',
+    autenticarJwtApi,
+    apiCartsController.getCartDeUsuarioHandler);
 
-apiCartsRouter.put('/:cid', autenticarJwtApi,
+apiCartsRouter.put('/:cid',
+    autenticarJwtApi,
     soloCartDeUsuarioOadmin(),
     apiCartsController.putCidHandler);
 
+apiCartsRouter.post('/:cid/product/:pid',
+    autenticarJwtApi,
+    soloCartDeUsuarioOadmin(),
+    apiCartsController.postProductHandler);
+
+apiCartsRouter.put('/:cid/product/:pid',
+    autenticarJwtApi,
+    soloCartDeUsuarioOadmin(),
+    apiCartsController.putProductQuantityHandler);
+
 apiCartsRouter.get('/:cid/purchase', soloCartDeUsuarioOadmin(), purchaseController);
 
-
-apiCartsRouter.post('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.postProductHandler);
-
-apiCartsRouter.put('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.putProductQuantityHandler);
 
 apiCartsRouter.delete('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.deleteProductHandler);
 

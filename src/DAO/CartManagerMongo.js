@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { InvalidArgumentError } from '../models/errors/InvalidArgument.error.js';
-import {NotFoundError} from '../models/errors/NotFound.error.js';
+import { NotFoundError } from '../models/errors/NotFound.error.js';
 import cartModel from '../models/schemaCart.js';
 import { logger } from '../utils/logger.js';
 import { toPojo } from '../utils/topojo.js';
@@ -40,37 +40,36 @@ class CartManagerMongo {
         const actualizado = await this.#db.findOneAndUpdate({ id: idCart }, { productos: productos.products }, { new: true })
             .select({ _id: 0 })
             .select({ 'productos.producto._id': 0 })
-              .select({ 'productos._id': 0 }).lean();
+            .select({ 'productos._id': 0 }).lean();
 
         // Chequear que todos los productos estén incluidos en la base
-        if (!actualizado.productos.every(x=> x.producto)){
+        if (!actualizado.productos.every(x => x.producto)) {
             throw new NotFoundError('Producto no encontrado en la base de datos');
         }
-        
+
         return actualizado;
     }
 
     async updateProductQuantity(idCart, id_producto, quantity) {
-        let updated = this.#db.findOneAndUpdate({
+        let updated = await this.#db.findOneAndUpdate({
             id: idCart,
             productos: { $elemMatch: { id: id_producto } }
         },
-            { $inc: { 'productos.$.quantity': quantity } });
-
+            { $inc: { 'productos.$.quantity': quantity } }, { new: true }).select({ _id: 0 }).lean();
+        if(!updated) throw new NotFoundError('No se encuentra el id del producto');
         return updated;
     }
 
     async addProductoToCart(idCart, idProducto) {
         // Chequear si ya está ese procucto en el carrito
-        const existeProducto = await this.#db.find(
+        const existeProducto = await this.#db.findOne(
             {
                 "id": idCart,
-                "productos": {
-                    "$eq": { id: idProducto }
-                }
+                "productos.id": idProducto
+
             }).select({ _id: 0 }).lean();
 
-        if (existeProducto.length > 0) {
+        if (existeProducto) {
             return this.#db.updateOne(
                 {
                     "id": idCart,

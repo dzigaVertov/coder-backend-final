@@ -31,6 +31,11 @@ class CartService {
         const cartActualizado = await cartRepository.updateProductos(cartId, productos);
         return cartActualizado;
     }
+
+    async agregarProductoAlCart(cartId, prodId) {
+        const carritoActualizado = await cartRepository.addProducto(cartId, prodId);
+        return carritoActualizado;
+    }
 }
 
 export const cartService = new CartService();

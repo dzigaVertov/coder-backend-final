@@ -27,7 +27,7 @@ describe('api rest', () => {
 
             it('Devuelve la  lista de carts, statusCode:200', async () => {
                 const { _body, statusCode } = await httpClient.get('/api/carts/allcarts').set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]);
-                console.log('body:', _body);
+                assert.equal(statusCode, 200);
             });
 
             it('Devuelve status 401 si el usuario no es admin', async () => {
@@ -174,28 +174,177 @@ describe('api rest', () => {
                 _body.productos.forEach(x => assert.equal(x.quantity, 1));
             });
 
-            it.only('Devuelve status 404 si alguno de los productos no está en el cart o si las cantidades no son válidas', async () => {
+            it('Devuelve status 404 si alguno de los productos no está en el cart o si las cantidades no son válidas', async () => {
                 const cartId = cartEnDb.id;
                 const nuevosProductos = productosEnDb.map(x => { return { id: x, quantity: 1 } });
-                nuevosProductos[2].id = 'unaidnovalida';
+                nuevosProductos[2].id = 'unaidnovalida'; // producto no incluido en la base
                 const { _body, statusCode } = await httpClient.put('/api/carts/' + cartId).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send(nuevosProductos);
+                assert.equal(statusCode, 404);
+            });
+
+            it('Devuelve 401 si no hay usuario logueado', async () => {
+                const cartId = cartEnDb.id;
+                const nuevosProductos = productosEnDb.map(x => { return { id: x, quantity: 1 } });
+                const { statusCode } = await httpClient.put('/api/carts/' + cartId).send(nuevosProductos);
+                assert.equal(statusCode, 401);
+
+            });
+
+        });
+
+        describe('POST pid', () => {
+            let productosEnDb;
+            let cartEnDb;
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+                const prods = crearMockProducto(10);
+                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
+                productosEnDb = prods.map(x => x.id);
+            });
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+                await managerProductosMongo.deleteMany({});
+            });
+
+            beforeEach(async () => {
+                // Agregar un cart directamente a la base de datos con el owner del USUARIO_TEST_2
+                const prodsenCart = productosEnDb.slice(0, 3).map((prod, index) => {
+                    return { id: prod, quantity: index + 1 };
+                });
+                cartEnDb = {
+                    productos: prodsenCart,
+                    cartOwner: USUARIO_TEST_2.inputCorrecto.id,
+                    id: 'sd342lskdf23jsdf3j'
+                };
+                await cartManagerMongo.create(cartEnDb);
+            });
+
+            afterEach(async () => {
+                await cartManagerMongo.deleteMany({});
+            });
+
+            it('Agrega un producto al Cart, devuelve status 201', async () => {
+                const cartId = cartEnDb.id;
+                const pid = productosEnDb[3];
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { _body, statusCode } = await httpClient.post(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                assert.equal(statusCode, 201);
+                assert.ok(prodAgregado);
+                assert.equal(prodAgregado.quantity, 1);
+
+            });
+
+            it('Si el producto ya está en el Cart, aumenta la cantidad por 1, devuelve status 201', async () => {
+                const cartId = cartEnDb.id;
+                const pid = productosEnDb[0];
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { statusCode } = await httpClient.post(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+
+                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                assert.equal(statusCode, 201);
+                assert.ok(prodAgregado);
+                assert.equal(prodAgregado.quantity, 2);
+
+            });
+
+            it('Devuelve 404 si el id no corresponde a un producto en la base', async () => {
+                const cartId = cartEnDb.id;
+                const pid = 'idInvalido01232342';
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { statusCode } = await httpClient.post(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                assert.equal(statusCode, 404);
+                assert.ok(!prodAgregado);
+            });
+
+        })
+
+        describe('PUT pid', () => {
+            let productosEnDb;
+            let cartEnDb;
+            
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+                const prods = crearMockProducto(10);
+                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
+                productosEnDb = prods.map(x => x.id);
+            });
+
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+                await managerProductosMongo.deleteMany({});
+            });
+
+            beforeEach(async () => {
+                // Agregar un cart directamente a la base de datos con el owner del USUARIO_TEST_2
+                const prodsenCart = productosEnDb.slice(0, 3).map((prod, index) => {
+                    return { id: prod, quantity: index + 1 };
+                });
+                cartEnDb = {
+                    productos: prodsenCart,
+                    cartOwner: USUARIO_TEST_2.inputCorrecto.id,
+                    id: 'sd342lskdf23jsdf3j'
+                };
+                await cartManagerMongo.create(cartEnDb);
+            });
+
+            afterEach(async () => {
+                await cartManagerMongo.deleteMany({});
+            });
+
+            it.only('Aumenta la cantidad de un producto en el cart, devuelve status 201', async () => {
+                const cartId = cartEnDb.id;
+                const pid = productosEnDb[0];
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({quantity:3});
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+                
+                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                
+                assert.equal(statusCode, 201);
+                assert.ok(prodAgregado);
+                assert.equal(prodAgregado.quantity, 4);
+
+            });
+
+            it.only('Si el producto no está en el Cart, devuelve 404', async () => {
+                const cartId = cartEnDb.id;
+                const pid = 'idnovalido';
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({quantity:3});
+                console.log('body: ', _body);
                 assert.equal(statusCode, 404);
 
 
             });
 
-            it('Devuelve 401 si no hay usuario logueado', async () => {
-                throw new Error('test no implementado');
+            it('Devuelve 404 si el id no corresponde a un producto en la base', async () => {
+                const cartId = cartEnDb.id;
+                const pid = 'idInvalido01232342';
+                const url = `/api/carts/${cartId}/product/${pid}`;
+
+                const { statusCode } = await httpClient.post(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                assert.equal(statusCode, 404);
+                assert.ok(!prodAgregado);
             });
 
-            it('Devuelve 401 si el usuario no es el dueño del cart', async () => {
-                throw new Error('test no implementado');
-            });
-
-
-
-
-        });
+        })
     });
 });
 
