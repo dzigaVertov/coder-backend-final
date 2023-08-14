@@ -37,9 +37,22 @@ apiCartsRouter.put('/:cid/product/:pid',
     soloCartDeUsuarioOadmin(),
     apiCartsController.putProductQuantityHandler);
 
-apiCartsRouter.get('/:cid/purchase', soloCartDeUsuarioOadmin(), purchaseController);
+apiCartsRouter.delete('/:cid/product/',
+    autenticarJwtApi,
+    soloCartDeUsuarioOadmin(),
+    apiCartsController.vaciarCarritoHandler);
 
 
-apiCartsRouter.delete('/:cid/product/:pid', soloCartDeUsuarioOadmin(), apiCartsController.deleteProductHandler);
+apiCartsRouter.delete('/:cid/product/:pid',
+    autenticarJwtApi,
+    soloCartDeUsuarioOadmin(),
+    apiCartsController.deleteProductHandler);
 
-apiCartsRouter.delete('/:cid', soloCartDeUsuarioOadmin(), apiCartsController.vaciarCarritoHandler);
+apiCartsRouter.get('/:cid/purchase',
+    autenticarJwtApi,
+    soloCartDeUsuarioOadmin(),
+    apiCartsController.purchaseHandler);
+
+
+
+

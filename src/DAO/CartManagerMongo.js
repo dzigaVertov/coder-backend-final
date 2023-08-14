@@ -27,7 +27,7 @@ class CartManagerMongo {
     }
 
     async readOne(query) {
-        const cart = this.#db.findOne(query).select({ _id: 0 }).lean();
+        const cart = this.#db.findOne(query).select({ 'productos._id': 0 }).select({ _id: 0 }).lean();
         logger.info(`Cart recuperado en DAO con query:${query}`);
         return cart;
     }
@@ -37,7 +37,8 @@ class CartManagerMongo {
     }
 
     async updateProductos(idCart, productos) {
-        const actualizado = await this.#db.findOneAndUpdate({ id: idCart }, { productos: productos.products }, { new: true })
+        console.log('productos: ', productos);
+        const actualizado = await this.#db.findOneAndUpdate({ id: idCart }, { productos: productos }, { new: true })
             .select({ _id: 0 })
             .select({ 'productos.producto._id': 0 })
             .select({ 'productos._id': 0 }).lean();
@@ -51,12 +52,20 @@ class CartManagerMongo {
     }
 
     async updateProductQuantity(idCart, id_producto, quantity) {
+        const cart = await this.#db.findOne({ id: idCart }).lean();
+        const producto = cart.productos.find(x => x.id === id_producto);
+
+        if (!producto) throw new NotFoundError('No se encuentra el id del producto');
+
+        const oldQuantity = producto.quantity;
+        if ((quantity + oldQuantity) <= 0) throw new InvalidArgumentError(`Cantidad de productos inválida: ${quantity}`);
+
         let updated = await this.#db.findOneAndUpdate({
             id: idCart,
             productos: { $elemMatch: { id: id_producto } }
         },
-            { $inc: { 'productos.$.quantity': quantity } }, { new: true }).select({ _id: 0 }).lean();
-        if(!updated) throw new NotFoundError('No se encuentra el id del producto');
+            { $inc: { 'productos.$.quantity': quantity } }, { new: true }).select({ 'productos._id': 0 }).select({ _id: 0 }).lean();
+
         return updated;
     }
 
@@ -86,8 +95,17 @@ class CartManagerMongo {
     }
 
     async deleteProductFromCart(idCart, idProducto) {
-        return this.#db.updateOne({ id: idCart },
-            { $pullAll: { "productos": [{ id: idProducto }] } });
+        const existe = await this.#db.findOne({ 'productos.id': idProducto });
+        if (!existe) throw new NotFoundError(`El producto no existe en el cart`);
+
+        return this.#db.findOneAndUpdate({
+            id: idCart,
+
+        },
+            { $pull: { "productos": { id: idProducto } } }, { new: true })
+            .select({ 'productos._id': 0 })
+            .select({ _id: 0 })
+            .lean();
     }
 
     async deleteMany(query) {

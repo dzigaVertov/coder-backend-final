@@ -1,5 +1,8 @@
 import { cartRepository } from '../repositories/cartRepository.js';
 import { cartService } from '../services/cartService.js';
+import { purchaseService } from '../services/purchase.service.js';
+
+
 
 export async function getHandler(req, res, next) {
     try {
@@ -86,7 +89,18 @@ export async function vaciarCarritoHandler(req, res, next) {
     try {
         let idCarrito = req.params.cid;
         let carritoActualizado = await cartRepository.vaciarCarrito(idCarrito);
-        res.json(carritoActualizado);
+        res.status(200).json(carritoActualizado);
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+export async function purchaseHandler(req, res, next) {
+    let cartId = req.params.cid;
+    try {
+        const purchaseTicket = purchaseService.createPurchase(cartId);
+        res.status(200).send(purchaseTicket);
     } catch (error) {
         next(error);
     }

@@ -11,7 +11,7 @@ import { managerProductosMongo } from '../../src/DAO/ProductManagerMongo.js';
 const httpClient = supertest('http://localhost:8080');
 
 describe('api rest', () => {
-    describe.only('/api/carts', () => {
+    describe('/api/carts', () => {
         let cookieAdmin = {};         // el GET de lista de carts requiere un usuario administrador
         let cookieUser = {};
 
@@ -272,7 +272,7 @@ describe('api rest', () => {
         describe('PUT pid', () => {
             let productosEnDb;
             let cartEnDb;
-            
+
             before(async () => {
                 await loguearUsuarios(cookieAdmin, cookieUser);
                 const prods = crearMockProducto(10);
@@ -302,53 +302,130 @@ describe('api rest', () => {
                 await cartManagerMongo.deleteMany({});
             });
 
-            it.only('Aumenta la cantidad de un producto en el cart, devuelve status 201', async () => {
+            it('Aumenta la cantidad de un producto en el cart, devuelve status 201', async () => {
                 const cartId = cartEnDb.id;
                 const pid = productosEnDb[0];
                 const url = `/api/carts/${cartId}/product/${pid}`;
 
-                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({quantity:3});
+                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({ quantity: 3 });
 
                 const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
-                
+
                 const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
-                
+
                 assert.equal(statusCode, 201);
                 assert.ok(prodAgregado);
                 assert.equal(prodAgregado.quantity, 4);
 
             });
 
-            it.only('Si el producto no está en el Cart, devuelve 404', async () => {
+            it('Devuelve 404 si el producto no está en el Cart', async () => {
                 const cartId = cartEnDb.id;
                 const pid = 'idnovalido';
                 const url = `/api/carts/${cartId}/product/${pid}`;
 
-                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({quantity:3});
-                console.log('body: ', _body);
+                const { statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({ quantity: 3 });
                 assert.equal(statusCode, 404);
-
-
             });
 
             it('Devuelve 404 si el id no corresponde a un producto en la base', async () => {
                 const cartId = cartEnDb.id;
                 const pid = 'idInvalido01232342';
                 const url = `/api/carts/${cartId}/product/${pid}`;
-
-                const { statusCode } = await httpClient.post(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
-
-                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
-                const prodAgregado = cartActualizado.productos.find(x => x.id === pid);
+                const { statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({ quantity: 3 });
                 assert.equal(statusCode, 404);
-                assert.ok(!prodAgregado);
             });
 
+            it('Devuelve 400 si la cantidad resultante de items es menor o igual a 0', async () => {
+                const cartId = cartEnDb.id;
+                const pid = productosEnDb[0];
+                const url = `/api/carts/${cartId}/product/${pid}`;
+                const { _body, statusCode } = await httpClient.put(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({ quantity: -2 });
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cartId });
+                const quantityActualizada = cartActualizado.productos.find(x => x.id === pid).quantity;
+
+                assert.equal(statusCode, 400);
+                assert.equal(quantityActualizada, 1);
+            })
+
         })
+
+        describe('DELETE pid', () => {
+            let productosEnDb;
+            let cartEnDb;
+
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+                const prods = crearMockProducto(10);
+                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
+                productosEnDb = prods.map(x => x.id);
+            });
+
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+                await managerProductosMongo.deleteMany({});
+            });
+
+            beforeEach(async () => {
+                // Agregar un cart directamente a la base de datos con el owner del USUARIO_TEST_2
+                const prodsenCart = productosEnDb.slice(0, 3).map((prod, index) => {
+                    return { id: prod, quantity: index + 1 };
+                });
+                cartEnDb = {
+                    productos: prodsenCart,
+                    cartOwner: USUARIO_TEST_2.inputCorrecto.id,
+                    id: 'sd342lskdf23jsdf3j'
+                };
+                await cartManagerMongo.create(cartEnDb);
+            });
+
+            afterEach(async () => {
+                await cartManagerMongo.deleteMany({});
+            });
+
+            it('Elimina el producto del cart, devuelve 200', async () => {
+                const cid = cartEnDb.id;
+                const pid = productosEnDb[0];
+
+                const url = `/api/carts/${cid}/product/${pid}`;
+
+                const { _body, statusCode } = await httpClient.delete(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+                const existe = await cartManagerMongo.readOne({ 'productos.id': pid });
+
+                assert.equal(statusCode, 200);
+                assert.ok(!existe);
+            });
+
+            it('Devuelve 404 si el producto no existe en el cart', async () => {
+                const cid = cartEnDb.id;
+                const pid = 'idInvalido-sfei';
+
+                const url = `/api/carts/${cid}/product/${pid}`;
+
+                const { _body, statusCode } = await httpClient.delete(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                assert.equal(statusCode, 404);
+
+            });
+
+            it('Vacía el carrito si no se pasa id de producto, devuelve status 200', async () => {
+                const cid = cartEnDb.id;
+                const url = `/api/carts/${cid}/product`;
+
+                const { _body, statusCode } = await httpClient.delete(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cart = await cartManagerMongo.readOne({ id: cid });
+                assert.equal(statusCode, 200);
+                assert.equal(cart.productos.length, 0);
+            });
+
+        });
+
+
     });
+
+
 });
-
-
-
 
 

@@ -7,7 +7,11 @@ const schemaCartProd = new mongoose.Schema({
         type: String,
         required: true
     },
-    quantity: { type: Number, required: true }
+    quantity: {
+        type: Number,
+        min: 0,
+        required: true
+    }
 });
 
 schemaCartProd.virtual('producto', {

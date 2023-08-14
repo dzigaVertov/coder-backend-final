@@ -16,7 +16,7 @@ class CartRepository extends BaseRepository {
     async updateProductos(cartId, productos) {
         const productosValidados = new CartProductArrayModel(productos);
 
-        let cartActualizado = await this.dao.updateProductos(cartId, productosValidados);
+        let cartActualizado = await this.dao.updateProductos(cartId, productosValidados.products);
         return cartActualizado;
     }
 
@@ -34,12 +34,12 @@ class CartRepository extends BaseRepository {
     }
 
     async deleteProduct(cartId, codigoProducto) {
-        let carritoActualizado = await super.dao.deleteProductFromCart(cartId, codigoProducto);
+        let carritoActualizado = await this.dao.deleteProductFromCart(cartId, codigoProducto);
         return carritoActualizado;
     }
 
     async vaciarCarrito(cartId) {
-        let carritoActualizado = await super.dao.updateProductos(cartId, []);
+        let carritoActualizado = await this.dao.updateProductos(cartId, []);
         return carritoActualizado;
     }
 }
