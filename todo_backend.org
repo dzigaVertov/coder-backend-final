@@ -288,7 +288,7 @@
 *** DONE Hacer que sólo se pueda crear cart si es el usuario logueado o admin
 *** DONE Arreglar repositorio de carts
 *** DONE Hacer tests de carts
-*** TODO Resolver purchase
+*** DONE Resolver purchase
 *** TODO Resolver cuestión mailing
 *** TODO Resolver deployment
 *** TODO Borrar código de sockets

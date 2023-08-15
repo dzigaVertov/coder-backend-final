@@ -21,7 +21,7 @@ class CartManagerMongo {
     }
 
     async getCartById(id) {
-        const cart = this.#db.findOne({ "id": id }).select({ _id: 0 }).lean();
+        const cart = await this.#db.findOne({ "id": id }).select({ _id: 0 }).lean();
         logger.info(`Cart id:${id} encontrado en el DAO`);
         return cart;
     }
@@ -43,7 +43,6 @@ class CartManagerMongo {
             .select({ 'productos.producto._id': 0 })
             .select({ 'productos._id': 0 }).lean();
 
-        console.log('actualizado: ', actualizado);
         // Chequear que todos los productos estén incluidos en la base
         if (actualizado && !actualizado.productos.every(x => x.producto)) {
             throw new NotFoundError('Producto no encontrado en la base de datos');
@@ -80,7 +79,7 @@ class CartManagerMongo {
             }).select({ _id: 0 }).lean();
 
         if (existeProducto) {
-            return this.#db.updateOne(
+            const updated = await this.#db.updateOne(
                 {
                     "id": idCart,
                     "productos.id": idProducto
@@ -88,10 +87,12 @@ class CartManagerMongo {
                 ,
                 { "$inc": { "productos.$.quantity": 1 } }
             );
+            return updated;
         } else {
-            return this.#db.updateOne(
+            const updated = await this.#db.updateOne(
                 { "id": idCart },
                 { "$push": { "productos": { "id": idProducto, "quantity": 1 } } });
+            return updated;
         }
     }
 
@@ -99,7 +100,7 @@ class CartManagerMongo {
         const existe = await this.#db.findOne({ 'productos.id': idProducto });
         if (!existe) throw new NotFoundError(`El producto no existe en el cart`);
 
-        return this.#db.findOneAndUpdate({
+        const borrado = await this.#db.findOneAndUpdate({
             id: idCart,
 
         },
@@ -107,6 +108,8 @@ class CartManagerMongo {
             .select({ 'productos._id': 0 })
             .select({ _id: 0 })
             .lean();
+
+        return borrado;
     }
 
     async deleteMany(query) {

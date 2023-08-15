@@ -7,6 +7,7 @@ import { chequearPassword, hashear } from '../utils/criptografia.js';
 import { usersRepository } from '../repositories/userRepository.js';
 import { logger } from '../utils/logger.js';
 import { ExpiredTokenError } from '../models/errors/ExpiredToken.error.js';
+import { AuthenticationError } from '../models/errors/Authentication.error.js';
 // import { JsonWebTokenError } from 'jsonwebtoken';
 
 // LOCAL
@@ -15,7 +16,7 @@ passport.use('local', new LocalStrategy({ usernameField: 'email' }, checkUsernam
 async function checkUsernamePassword(email, password, done) {
     let usuario = await usersRepository.readOne({ email: email });
     if (!usuario || !chequearPassword(password, usuario.password)) {
-        return done(new Error('Error en el login'));
+        return done(new AuthenticationError('Error en el login'));
     }
     done(null, usuario);
 }
@@ -49,7 +50,6 @@ async function jwtVerificado(jwt_payload, done) {
     try {
         return done(null, jwt_payload);
     } catch (error) {
-        console.log(error);
         done(error);
     }
 }
@@ -60,7 +60,7 @@ export function autenticarReset(req, res, next) {
 
         if (error) {
             logger.error(`Error: ${error.message} atrapado en callback de autendicación - ${new Date().toLocaleString()} `);
-            return next(new Error('Error de autenticación'));
+            return next(new AuthenticationError(`Authentication error: ${error.messsage}`));
         }
 
         if (!jwt_payload) {
@@ -80,7 +80,7 @@ export function autenticarReset(req, res, next) {
 export function autenticarJwtApi(req, res, next) {
     function passportCB(error, jwt_payload, info) {
         if (error || !jwt_payload) {
-            return next(new Error('Error de autenticación'));
+            return next(new AuthenticationError('Error de autenticación'));
         }
         req.user = jwt_payload;
         next();

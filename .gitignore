@@ -10,3 +10,5 @@
 /src/mocks/cartMock.js~
 /src/models/CartProductArrayModel.js~
 /src/models/CartProductModel.js~
+/src/models/errors/Authentication.error.js~
+/src/models/errors/Authorization.error.js~

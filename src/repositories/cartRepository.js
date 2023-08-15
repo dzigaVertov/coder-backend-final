@@ -15,7 +15,6 @@ class CartRepository extends BaseRepository {
 
     async updateProductos(cartId, productos) {
         const productosValidados = new CartProductArrayModel(productos);
-        console.log('validados: ', productosValidados);
 
         let cartActualizado = await this.dao.updateProductos(cartId, productosValidados.products);
         return cartActualizado;

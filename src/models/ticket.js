@@ -5,7 +5,6 @@ import * as valid from '../utils/validacion.js';
 export class Ticket {
 
     constructor({ total, email }) {
-        console.log('purchaser: ', email);
         this.id = randomUUID();
         this.purchase_datetime = new Date();
         this.amount = valid.positivo(valid.noVacio(total));

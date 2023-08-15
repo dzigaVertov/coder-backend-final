@@ -422,7 +422,7 @@ describe('api rest', () => {
 
         });
 
-        describe.only('GET /api/carts/:cid/purchase', () => {
+        describe('GET /api/carts/:cid/purchase', () => {
             let productosEnDb;
             let cartEnDb;
 

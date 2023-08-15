@@ -1,3 +1,5 @@
+import { AuthenticationError } from '../models/errors/Authentication.error.js';
+import { AuthorizationError } from '../models/errors/Authorization.error.js';
 import { InvalidArgumentError } from '../models/errors/InvalidArgument.error.js';
 import { NotFoundError } from '../models/errors/NotFound.error.js';
 import { NotLoggedInError } from '../models/errors/NotLoggedInError.js';
@@ -7,11 +9,9 @@ export async function apiErrorHandler(error, req, res, next) {
 
     switch (true) {
         case error instanceof InvalidArgumentError:
-            console.log('este es el error: ', error);
             res.sendStatus(400);
             return;
         case error instanceof NotFoundError:
-            console.log('este es el error: ', error);
             res.sendStatus(404);
             return;
         case error instanceof RepeatedPasswordError:
@@ -22,8 +22,15 @@ export async function apiErrorHandler(error, req, res, next) {
             req.logger.debug('Not logged in Error');
             res.status(401).json({ message: 'Not logged in' });
             return;
+        case error instanceof AuthorizationError:
+            req.logger.debug('Authorization Error');
+            res.status(401).json({ message: `Authorization Error: ${error.description}` });
+            return;
+        case error instanceof AuthenticationError:
+            req.logger.debug('Authorization Error');
+            res.status(401).json({ message: `Authentication Error: ${error.description}` });
+            return;
         default:
-            console.log('este es el error: ', error);
             res.status(401).json({ estado: 'error', tipo: error.tipo, descripcion: error.description });
 
 

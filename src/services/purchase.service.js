@@ -15,7 +15,7 @@ class PurchaseService {
         const email = user.email;
         const ticket = await ticketRepository.create({ total, email });
 
-        actualizarCart(prodsSinStock, cart.id);
+        await actualizarCart(prodsSinStock, cart.id);
 
         return ticket;
     }
@@ -57,7 +57,5 @@ async function calcularTotalTicket(prodsConStock) {
 }
 
 async function actualizarCart(prodsRemanentes, cartId) {
-    console.log('prodsRemanentes: ', prodsRemanentes);
     const actualizacart = await cartRepository.updateProductos(cartId, prodsRemanentes);
-    console.log('actualizaCart: ', actualizacart);
 }
