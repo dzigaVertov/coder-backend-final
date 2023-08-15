@@ -15,7 +15,7 @@ class PurchaseService {
         const email = user.email;
         const ticket = await ticketRepository.create({ total, email });
 
-        actualizarCart(prodsSinStock, cart._id);
+        actualizarCart(prodsSinStock, cart.id);
 
         return ticket;
     }
@@ -53,10 +53,11 @@ async function calcularTotalTicket(prodsConStock) {
         precioTotal += prEnCart.producto.price * prEnCart.quantity;
     }
 
-    return precioTotal;
+    return precioTotal.toFixed(2);
 }
 
 async function actualizarCart(prodsRemanentes, cartId) {
     console.log('prodsRemanentes: ', prodsRemanentes);
-    await cartRepository.updateProductos(cartId, prodsRemanentes);
+    const actualizacart = await cartRepository.updateProductos(cartId, prodsRemanentes);
+    console.log('actualizaCart: ', actualizacart);
 }

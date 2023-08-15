@@ -27,22 +27,23 @@ class CartManagerMongo {
     }
 
     async readOne(query) {
-        const cart = this.#db.findOne(query).select({ 'productos._id': 0 }).select({ _id: 0 }).lean();
+        const cart = await this.#db.findOne(query).select({ 'productos._id': 0 }).select({ _id: 0 }).lean();
         logger.info(`Cart recuperado en DAO con query:${query}`);
         return cart;
     }
 
     async getCarts() {
-        return this.#db.find();
+        const carts = await this.#db.find();
+        return carts;
     }
 
     async updateProductos(idCart, productos) {
-        console.log('productos: ', productos);
         const actualizado = await this.#db.findOneAndUpdate({ id: idCart }, { productos: productos }, { new: true })
             .select({ _id: 0 })
             .select({ 'productos.producto._id': 0 })
             .select({ 'productos._id': 0 }).lean();
 
+        console.log('actualizado: ', actualizado);
         // Chequear que todos los productos estén incluidos en la base
         if (actualizado && !actualizado.productos.every(x => x.producto)) {
             throw new NotFoundError('Producto no encontrado en la base de datos');
@@ -111,9 +112,6 @@ class CartManagerMongo {
     async deleteMany(query) {
         return await this.#db.deleteMany(query);
     }
-
-
-
 }
 
 export const cartManagerMongo = new CartManagerMongo();

@@ -422,23 +422,28 @@ describe('api rest', () => {
 
         });
 
-        describe('GET /api/carts/:cid/purchase', () => {
+        describe.only('GET /api/carts/:cid/purchase', () => {
             let productosEnDb;
             let cartEnDb;
 
             before(async () => {
                 await loguearUsuarios(cookieAdmin, cookieUser);
-                const prods = crearMockProducto(10);
-                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
-                productosEnDb = prods.map(x => x.id);
+
             });
 
             after(async () => {
                 await usersDaoMongoose.deleteMany({});
-                await managerProductosMongo.deleteMany({});
+
             });
 
             beforeEach(async () => {
+                const prods = crearMockProducto(10);
+                // Generar producto sin stock para que falle la compra
+                prods[0].stock = 10;
+                prods[1].stock = 0;
+                prods[2].stock = 10;
+                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
+                productosEnDb = prods.map(x => x.id);
                 // Agregar un cart directamente a la base de datos con el owner del USUARIO_TEST_2
                 const prodsenCart = productosEnDb.slice(0, 3).map((prod, index) => {
                     return { id: prod, quantity: index + 1 };
@@ -453,17 +458,50 @@ describe('api rest', () => {
 
             afterEach(async () => {
                 await cartManagerMongo.deleteMany({});
+                await managerProductosMongo.deleteMany({});
             });
 
 
             it('Genera una compra a partir de un cart con productos, devuelve el ticket de la compra y status 200', async () => {
                 const cid = cartEnDb.id;
                 const url = `/api/carts/${cid}/purchase`;
+
                 const { _body, statusCode } = await httpClient.get(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
 
-                console.log(_body, statusCode);
+                assert.equal(statusCode, 200);
+                assert.equal(_body.purchaser, USUARIO_TEST_2.inputCorrecto.email);
 
-            })
+            });
+
+            it('Disminuye los stocks en la base de datos de productos', async () => {
+                const cid = cartEnDb.id;
+                const url = `/api/carts/${cid}/purchase`;
+
+                const { _body, statusCode } = await httpClient.get(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const prod1 = await managerProductosMongo.readOne({ id: productosEnDb[0] });
+                const prod2 = await managerProductosMongo.readOne({ id: productosEnDb[1] });
+                const prod3 = await managerProductosMongo.readOne({ id: productosEnDb[2] });
+
+                assert.equal(prod1.stock, 9);
+                assert.equal(prod2.stock, 0);
+                assert.equal(prod3.stock, 7);
+            });
+
+
+            it('Mantiene en el cart sólo los productos que no tienen stock suficiente para completar la compra', async () => {
+                const cid = cartEnDb.id;
+                const url = `/api/carts/${cid}/purchase`;
+
+                await httpClient.get(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                const cartActualizado = await cartManagerMongo.readOne({ id: cid });
+                const prodsActualizados = cartActualizado.productos;
+
+                assert.equal(prodsActualizados.length, 1);
+                assert.equal(prodsActualizados[0].id, productosEnDb[1]);
+
+            });
         });
 
 
