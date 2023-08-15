@@ -43,6 +43,17 @@ class UserService {
         return userActualizado;
     }
 
+    async getAllUsers() {
+        const users = await usersRepository.readMany({});
+        const dtos = [];
+        for (const user of users) {
+            const domainUser = new Usuario(user);
+            dtos.push(domainUser.dto());
+        }
+
+        return dtos;
+    }
+
 }
 
 export const userService = new UserService();

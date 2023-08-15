@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import supertest from 'supertest';
 import { usersDaoMongoose } from '../../src/DAO/usersDaoMongoose.js';
 import { USUARIO_TEST, USUARIO_TEST_2 } from '../../src/models/userModel.js';
+import { loguearUsuarios } from '../utils/usersUtils.js';
 
 
 
@@ -12,12 +13,34 @@ describe('api rest', () => {
 
     describe('/api/users', () => {
 
-        beforeEach(async () => {
-            await usersDaoMongoose.deleteMany({});
-        });
+        describe('GET /', () => {
+            let cookieAdmin = {};
+            let cookieUser = {};
 
-        afterEach(async () => {
-            await usersDaoMongoose.deleteMany({});
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+            });
+
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+            });
+
+            it('Devuelve una lista de los usuarios registrados, no incluye datos confidenciales status 200', async () => {
+                const { _body, statusCode } = await httpClient.get('/api/users').set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]);
+
+                assert.equal(statusCode, 200);
+                assert.equal(_body.length, 2);
+
+                _body.forEach(x => {
+                    assert.ok(x.first_name);
+                    assert.ok(x.last_name);
+                    assert.ok(x.email);
+                    assert.ok(x.age);
+                    assert.ok(x.role);
+                    assert.ok(!x.password);
+                });
+            });
+
         });
 
         describe('POST', () => {
@@ -69,8 +92,8 @@ describe('api rest', () => {
                 await usersDaoMongoose.deleteMany({});
             });
 
-            it('Actualiza campos del usuario logueado, devuelve datos actualizados, status 200',async ()=>{
-                
+            it('Actualiza campos del usuario logueado, devuelve datos actualizados, status 200', async () => {
+
             });
 
         });

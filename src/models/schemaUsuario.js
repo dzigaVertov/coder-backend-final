@@ -8,7 +8,8 @@ const schemaUsuario = new mongoose.Schema({
     password: { type: String, required: true }, // hasheado
     cart: { type: String },
     role: { type: String, enum: ['user', 'admin'], required: true, default: 'user' },
-    id: { type: String, required: true }
+    id: { type: String, required: true },
+    lastActiveAt: Date
 
 }, { versionKey: false });
 

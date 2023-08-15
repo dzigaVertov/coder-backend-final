@@ -10,6 +10,7 @@ export default class Usuario {
     #role;
     #id;
     #cart;
+    #lastActiveAt;
 
     constructor({ first_name, last_name, email, age, password, role, cart }) {
         this.#first_name = valid.soloAlfabetico(valid.noVacio(first_name));
@@ -21,6 +22,7 @@ export default class Usuario {
         this.#age = valid.positivo(valid.entero(valid.noVacio(age)));
         this.#id = randomUUID();
         this.#cart = cart;
+        this.#lastActiveAt = new Date();
     }
 
     get_email() { return this.#email; }
@@ -30,6 +32,7 @@ export default class Usuario {
     get_age() { return this.#age; }
     get_role() { return this.#role; }
     get_id() { return this.#id; }
+    get_lastActive() { return this.#lastActiveAt };
 
     set_role(newRole) {
         if (!valid.esRole(newRole)) throw new Error('No es rol válido');
@@ -46,7 +49,8 @@ export default class Usuario {
             age: this.#age,
             role: this.#role,
             id: this.#id,
-            cart: this.#cart
+            cart: this.#cart,
+            lastActive: this.#lastActiveAt
         };
     }
 
@@ -63,6 +67,7 @@ export default class Usuario {
     }
 }
 
+const activo = new Date();
 export const USUARIO_TEST = {
     inputCorrecto: {
         first_name: 'Marcelo',
@@ -71,7 +76,8 @@ export const USUARIO_TEST = {
         age: 75,
         role: 'user',
         password: '123',
-        id: 'abc23-34'
+        id: 'abc23-34',
+        lastActiveAt: activo
     },
     rolIncorrecto: {
         first_name: 'Marcelo',
@@ -80,7 +86,8 @@ export const USUARIO_TEST = {
         age: 75,
         role: 'hacker',
         password: '123',
-        id: 'abc23-34'
+        id: 'abc23-34',
+        lastActiveAt: activo
     },
     mailIncorrecto: {
         first_name: 'Marcelo',
@@ -89,7 +96,8 @@ export const USUARIO_TEST = {
         age: 75,
         role: 'user',
         password: '123',
-        id: 'abc23-34'
+        id: 'abc23-34',
+        lastActiveAt: activo
     },
     ageIncorrecto: {
         first_name: 'Marcelo',
@@ -97,13 +105,15 @@ export const USUARIO_TEST = {
         email: 'marceloortega@gmail.com',
         age: 'viejito',
         role: 'user',
-        password: '123'
+        password: '123',
+        lastActiveAt: activo
     },
     dto: {
         first_name: 'Marcelo',
         last_name: 'Ortega',
         email: 'marceloortega@gmail.com',
         role: 'user'
+
     },
     datos: {
         first_name: 'Marcelo',
@@ -112,7 +122,8 @@ export const USUARIO_TEST = {
         age: 75,
         role: 'user',
         password: '123',
-        id: 'abc23-34'
+        id: 'abc23-34',
+        lastActiveAt: activo
     }
 
 }

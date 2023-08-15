@@ -267,7 +267,7 @@ describe('api rest', () => {
                 assert.ok(!prodAgregado);
             });
 
-        })
+        });
 
         describe('PUT pid', () => {
             let productosEnDb;

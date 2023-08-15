@@ -11,7 +11,7 @@ export class BaseRepository {
 
     get dao() { return this.#dao; }
 
-    async create(data, options) {        
+    async create(data, options) {
         const domainObject = new this.#domainModel(data);
         const dbObject = await this.#dao.create(domainObject.datos());
         logger.debug(`Objecto creado en BaseRepository - ${new Date().toLocaleDateString()}`);
@@ -46,7 +46,7 @@ export class BaseRepository {
         return await this.#dao.updateMany(query, newData);
     }
 
-     async deleteOne(query, options) {
+    async deleteOne(query, options) {
         return await this.#dao.deleteOne(query);
     }
 

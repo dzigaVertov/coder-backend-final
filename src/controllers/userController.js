@@ -71,6 +71,16 @@ export async function getUserController(req, res, next) {
         req.logger.error(`Error: ${error.message} atrapado en getUserController `);
         next(error);
     }
+}
+
+export async function getAllUsers(req, res, next) {
+    try {
+        const usuarios = await userService.getAllUsers();
+        res.status(200).json(usuarios);
+
+    } catch (error) {
+        next(error);
+    }
 
 }
 
