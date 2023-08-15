@@ -422,6 +422,50 @@ describe('api rest', () => {
 
         });
 
+        describe('GET /api/carts/:cid/purchase', () => {
+            let productosEnDb;
+            let cartEnDb;
+
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+                const prods = crearMockProducto(10);
+                prods.forEach(async elem => await insertIntoMongoDb(elem, 'productos'));
+                productosEnDb = prods.map(x => x.id);
+            });
+
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+                await managerProductosMongo.deleteMany({});
+            });
+
+            beforeEach(async () => {
+                // Agregar un cart directamente a la base de datos con el owner del USUARIO_TEST_2
+                const prodsenCart = productosEnDb.slice(0, 3).map((prod, index) => {
+                    return { id: prod, quantity: index + 1 };
+                });
+                cartEnDb = {
+                    productos: prodsenCart,
+                    cartOwner: USUARIO_TEST_2.inputCorrecto.id,
+                    id: 'sd342lskdf23jsdf3j'
+                };
+                await cartManagerMongo.create(cartEnDb);
+            });
+
+            afterEach(async () => {
+                await cartManagerMongo.deleteMany({});
+            });
+
+
+            it('Genera una compra a partir de un cart con productos, devuelve el ticket de la compra y status 200', async () => {
+                const cid = cartEnDb.id;
+                const url = `/api/carts/${cid}/purchase`;
+                const { _body, statusCode } = await httpClient.get(url).set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
+
+                console.log(_body, statusCode);
+
+            })
+        });
+
 
     });
 

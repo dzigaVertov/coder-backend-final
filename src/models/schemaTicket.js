@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const schemaTicket = new Schema({
-    code: {
+    id: {
         type: String,
         required: true,
         unique: true

@@ -44,7 +44,7 @@ class CartManagerMongo {
             .select({ 'productos._id': 0 }).lean();
 
         // Chequear que todos los productos estén incluidos en la base
-        if (!actualizado.productos.every(x => x.producto)) {
+        if (actualizado && !actualizado.productos.every(x => x.producto)) {
             throw new NotFoundError('Producto no encontrado en la base de datos');
         }
 

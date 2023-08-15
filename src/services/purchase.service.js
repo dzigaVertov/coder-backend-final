@@ -6,17 +6,18 @@ import { cartRepository } from '../repositories/cartRepository.js';
 
 class PurchaseService {
     async createPurchase(cartId) {
-        const cart = cartRepository.readOne({_id:cartId});
+        const cart = await cartRepository.readOne({ id: cartId });
 
         const { prodsConStock, prodsSinStock } = await separarProdsStock(cart.productos);
         await actualizarStocks(prodsConStock);
-        const total = calcularTotalTicket(prodsConStock);
-        const ticket = new Ticket(total, idUser);
-        ticketRepository.create(ticket);
+        const total = await calcularTotalTicket(prodsConStock);
+        const user = await usersRepository.readOne({ id: cart.cartOwner });
+        const email = user.email;
+        const ticket = await ticketRepository.create({ total, email });
 
         actualizarCart(prodsSinStock, cart._id);
 
-        return Ticket;
+        return ticket;
     }
 }
 
@@ -26,10 +27,10 @@ async function separarProdsStock(prodsEnCart) {
     let prodsConStock = [];
     let prodsSinStock = [];
 
-    for (prEnCart of prodsEnCart) {
-        const producto = await prodRepository.getProductById(prodsEnCart._id);
-        if (prEncart.quantity <= producto.stock) {
-            prodsConStock.push(prodsEnCart);
+    for (const prEnCart of prodsEnCart) {
+
+        if (prEnCart.quantity <= prEnCart.producto.stock) {
+            prodsConStock.push(prEnCart);
         } else {
             prodsSinStock.push(prEnCart);
         }
@@ -39,22 +40,23 @@ async function separarProdsStock(prodsEnCart) {
 }
 
 async function actualizarStocks(prodsConsStock) {
-    for (prEnCart of prodsConsStock) {
-        const producto = await prodRepository.getProductById(prEnCart._id);
-        await prodRepository.updateProduct(prEnCart._id, { $substract: { stock: prEnCart.quantity } });
+    for (const prEnCart of prodsConsStock) {
+        const nuevoStock = prEnCart.producto.stock - prEnCart.quantity;
+        await prodRepository.updateProduct(prEnCart.id,
+            { stock: nuevoStock });
     }
 }
 
 async function calcularTotalTicket(prodsConStock) {
     let precioTotal = 0;
-    for (prEnCart of prodsConsStock) {
-        const producto = await prodRepository.getProductById(prEnCart._id);
-        precioTotal += producto.price * prEnCart.quantity;
+    for (const prEnCart of prodsConStock) {
+        precioTotal += prEnCart.producto.price * prEnCart.quantity;
     }
 
     return precioTotal;
 }
 
 async function actualizarCart(prodsRemanentes, cartId) {
-    await cartRepository.updateOne({ _id: cartId }, { productos: prodsRemanentes });
+    console.log('prodsRemanentes: ', prodsRemanentes);
+    await cartRepository.updateProductos(cartId, prodsRemanentes);
 }

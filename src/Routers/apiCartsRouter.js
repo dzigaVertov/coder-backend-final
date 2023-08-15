@@ -1,5 +1,4 @@
 import express, { Router } from 'express';
-import { purchaseController } from '../controllers/purchaseController.js';
 import * as apiCartsController from '../controllers/apiCartsController.js';
 import { soloRol, soloCartDeUsuarioOadmin, soloCreaCartPropioUsuarioOadmin } from '../middlewares/autorizacion.js';
 import { autenticarJwtApi } from '../middlewares/passport.js';

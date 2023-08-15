@@ -14,6 +14,7 @@ class ProductRepository {
     }
 
     async getProduct(query) {
+        console.log('query: ', query);
         const queryValidado = new BusquedaProducto(query);
         const producto = await this.dao.readOne(queryValidado);
         return producto;

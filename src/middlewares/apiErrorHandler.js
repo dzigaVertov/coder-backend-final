@@ -7,9 +7,11 @@ export async function apiErrorHandler(error, req, res, next) {
 
     switch (true) {
         case error instanceof InvalidArgumentError:
+            console.log('este es el error: ', error);
             res.sendStatus(400);
             return;
         case error instanceof NotFoundError:
+            console.log('este es el error: ', error);
             res.sendStatus(404);
             return;
         case error instanceof RepeatedPasswordError:

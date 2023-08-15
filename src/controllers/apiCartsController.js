@@ -99,8 +99,8 @@ export async function vaciarCarritoHandler(req, res, next) {
 export async function purchaseHandler(req, res, next) {
     let cartId = req.params.cid;
     try {
-        const purchaseTicket = purchaseService.createPurchase(cartId);
-        res.status(200).send(purchaseTicket);
+        const purchaseTicket = await purchaseService.createPurchase(cartId);
+        res.status(200).json(purchaseTicket);
     } catch (error) {
         next(error);
     }
