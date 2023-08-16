@@ -302,9 +302,9 @@ mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbacke
 ***** DONE en vista productos
 **** DONE Arreglar dto de usuario en perfil
 **** DONE Arreglar logout
-**** TODO Agregar boton de ir a carrito
-***** en profile
-***** en productos
+**** DONE Agregar boton de ir a carrito
+***** DONE en profile
+***** DONE en productos
 **** TODO Agregar botón de comprar carrito
 ***** en carrito
 **** TODO Arreglar render de carrito
