@@ -289,10 +289,12 @@
 *** DONE Arreglar repositorio de carts
 *** DONE Hacer tests de carts
 *** DONE Resolver purchase
-*** TODO Agregar ruta get a usuarios para obtener lista de usuario
-*** TODO Agregar ruta delete a usuarios para borrar usuarios que no hayan tenido conexión en los últimos dos días.
-*** TODO Resolver cuestión mailing
+*** DONE Agregar ruta get a usuarios para obtener lista de usuario
+*** DONE Agregar ruta delete a usuarios para borrar usuarios que no hayan tenido conexión en los últimos dos días.
+*** DONE Resolver cuestión mailing
 *** TODO Resolver deployment
+**** String de conexión:
+mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbackendfinal?retryWrites=true&w=majority
 *** TODO Resolver vistas
 **** TODO Agregar error handling de la ruta web
 *** TODO Borrar código de sockets
