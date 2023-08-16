@@ -1,6 +1,6 @@
 import { createTransport } from 'nodemailer';
 import { EMAIL_CONFIG } from '../config/email.config.js';
-import { construirJwt } from './sessionServices.js';
+
 
 
 
@@ -25,6 +25,13 @@ class EmailService {
         } catch (error) {
             throw error;
         }
+
+    }
+
+    async sendAvisoUsuarioEliminado(emailUsuario) {
+        const mensaje = 'Su usuario ha sido eliminado por haber transcurrido demasiado tiempo desde su última conexión.  Proceda.';
+
+        this.send("Estaempresa", emailUsuario, 'Su usuario ha sido eliminado', mensaje);
 
     }
 

@@ -74,12 +74,17 @@ class UserService {
             const transcurrido = ahora.getTime() - usr.lastActiveAt.getTime();
 
             if (transcurrido > INACTIVE_USER_DELETE_TIME) {
-                usuariosAborrar.push(usr.id);
+                usuariosAborrar.push(usr);
             }
         }
 
         if (usuariosAborrar.length) {
-            const result = await usersRepository.deleteMany({ id: { $in: usuariosAborrar } });
+
+            //enviar mails
+            usuariosAborrar.forEach(x => emailService.sendAvisoUsuarioEliminado(x.email));
+            const ids = usuariosAborrar.map(x=>x.id);
+            const result = await usersRepository.deleteMany({ id: { $in: ids } });
+
             return result;
         }
         return null;
