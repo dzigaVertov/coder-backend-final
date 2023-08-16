@@ -1,15 +1,19 @@
 <h1>Productos en el carrito</h1>
 
-
+<button id='comprarCarrito'>Comprar</button>
+<button id='vaciarCarrito'>Vaciar Carrito</button>
 {{#if hayDocs}}
 <ul class='lista'>  
   {{#each productos}}    
-      <li class='card'>
-        {{#each this}}
+    <li class='card'>
+      Número de items: {{this.quantity}}
+        {{#each this.producto}}
       <p>{{@key}}: {{this}}</p>
     {{/each}}
     </li>
   {{/each}}
 </ul>
 {{/if}}
+
+<script src="/js/cart.js"></script>
 

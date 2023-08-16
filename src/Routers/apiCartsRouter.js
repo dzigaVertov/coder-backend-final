@@ -21,6 +21,10 @@ apiCartsRouter.get('/',
     autenticarJwtApi,
     apiCartsController.getCartDeUsuarioHandler);
 
+apiCartsRouter.get('/purchase',
+    autenticarJwtApi,
+    apiCartsController.purchaseHandler);
+
 apiCartsRouter.put('/:cid',
     autenticarJwtApi,
     soloCartDeUsuarioOadmin(),

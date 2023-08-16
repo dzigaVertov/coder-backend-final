@@ -5,8 +5,6 @@ export async function getCartHandler(req, res, next) {
         const cid = req.user.cart;
         const cart = await cartRepository.readOne({ id: cid });
         const productos = cart.productos;
-        console.log(productos);
-        console.log(cart);
         const hayDocs = productos.length > 0;
         res.render('cart', { productos, hayDocs });
 

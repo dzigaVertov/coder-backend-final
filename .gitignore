@@ -15,3 +15,6 @@
 /src/utils/errors.log
 /src/utils/infoProductionServer.log
 /src/utils/testDebug.log
+/public/js/cart.js~
+/src/Routers/ticketRouter.js~
+/src/controllers/ticketController.js~

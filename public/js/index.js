@@ -21,7 +21,7 @@ const plantilla = Handlebars.compile(listaProductos);
 serverSocket.on('actualizacion', productos => {
     const contenedor = document.querySelector('#contenedorLista');
     if (contenedor) {
-        contenedor.innerHTML = plantilla({ productos, hayProductos: (productos.length>0) });
+        contenedor.innerHTML = plantilla({ productos, hayProductos: (productos.length > 0) });
     }
 });
 
@@ -40,13 +40,13 @@ function nuevoProducto(event) {
     formData.append("status", true);
     formData.append("stock", 200);
     formData.append("thumbnails", ["thumb-1", "thumb-2"]);
-    
+
     const campos = {};
     formData.forEach((value, key) => (campos[key] = value));
     fetch('/api/products', {
-        method : 'POST',
-        body : JSON.stringify(campos),
-        headers : {
+        method: 'POST',
+        body: JSON.stringify(campos),
+        headers: {
             "Content-type": "application/json"
         }
     });
