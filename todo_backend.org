@@ -297,6 +297,7 @@
 mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbackendfinal?retryWrites=true&w=majority
 *** TODO Resolver vistas
 **** TODO Agregar error handling de la ruta web
+**** TODO Hacer que login fallido vaya a register
 *** TODO Borrar código de sockets
 *** TODO Limpieza general
 *** TODO Entrega

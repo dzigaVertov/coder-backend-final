@@ -12,3 +12,6 @@
 /src/models/CartProductModel.js~
 /src/models/errors/Authentication.error.js~
 /src/models/errors/Authorization.error.js~
+/src/utils/errors.log
+/src/utils/infoProductionServer.log
+/src/utils/testDebug.log

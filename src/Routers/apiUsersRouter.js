@@ -27,7 +27,10 @@ apiUsersRouter.post('/', usersController.postUserController);
 
 apiUsersRouter.post('/sendLink', usersController.postUserSendLinkController);
 
-apiUsersRouter.post('/addtocart/:pid', autenticarJwtApi, soloLogueado, usersController.postAddToCartController);
+apiUsersRouter.post('/addtocart/:pid',
+                    autenticarJwtApi,
+                    soloLogueado,
+                    usersController.postAddToCartController);
 
 apiUsersRouter.post('/newpassword', passport.authenticate('jwt', { session: false }), usersController.postUserNewPassController);
 
