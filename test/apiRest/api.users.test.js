@@ -4,6 +4,7 @@ import supertest from 'supertest';
 import { usersDaoMongoose } from '../../src/DAO/usersDaoMongoose.js';
 import { USUARIO_TEST, USUARIO_TEST_2 } from '../../src/models/userModel.js';
 import { loguearUsuarios } from '../utils/usersUtils.js';
+import { toPojo } from '../../src/utils/topojo.js';
 
 
 
@@ -64,6 +65,7 @@ describe('api rest', () => {
 
         describe('GET userId', () => {
             beforeEach(async () => {
+                await usersDaoMongoose.deleteMany({});
                 const datosUsuario = USUARIO_TEST.inputCorrecto;
                 await usersDaoMongoose.create(datosUsuario);
             });
@@ -76,7 +78,7 @@ describe('api rest', () => {
                     const urlstring = '/api/users/' + USUARIO_TEST.inputCorrecto.id;
                     const response = await httpClient.get(urlstring);
                     assert.equal(response.statusCode, 200);
-                    assert.deepEqual(response.body, USUARIO_TEST.datos);
+                    assert.deepEqual(response.body, toPojo(USUARIO_TEST.datos));
                 });
             });
 
@@ -94,6 +96,26 @@ describe('api rest', () => {
 
             it('Actualiza campos del usuario logueado, devuelve datos actualizados, status 200', async () => {
 
+            });
+
+        });
+
+        describe('DELETE /', () => {
+            let cookieAdmin = {};
+            let cookieUser = {};
+
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+            });
+
+            after(async () => {
+                await usersDaoMongoose.deleteMany({});
+
+            });
+
+            it('Elimina los usuarios que no se hayan conectado en un cierto lapso, devuelve 201', async () => {
+                const { _body, statusCode } = await httpClient.delete('/api/users').set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]);
+                assert.equal(statusCode, 201);
             });
 
         });

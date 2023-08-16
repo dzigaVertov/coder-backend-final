@@ -12,7 +12,7 @@ export default class Usuario {
     #cart;
     #lastActiveAt;
 
-    constructor({ first_name, last_name, email, age, password, role, cart }) {
+    constructor({ first_name, last_name, email, age, password, role, cart, id }) {
         this.#first_name = valid.soloAlfabetico(valid.noVacio(first_name));
         this.#last_name = valid.soloAlfabetico(valid.noVacio(last_name));
         this.#email = valid.esMail(valid.noVacio(email));
@@ -20,7 +20,7 @@ export default class Usuario {
         this.#role = valid.esRole(role);
         age = parseInt(age);
         this.#age = valid.positivo(valid.entero(valid.noVacio(age)));
-        this.#id = randomUUID();
+        this.#id = id || randomUUID();
         this.#cart = cart;
         this.#lastActiveAt = new Date();
     }

@@ -21,6 +21,7 @@ export async function loguearUsuarios(cookieAdmin, cookieUser) {
     await insertIntoMongoDb(userTestAdmin, 'usuarios');
     await insertIntoMongoDb(userTestUser, 'usuarios');
 
+
     // Loguear role: admin
     const datosLogin = {
         email: USUARIO_TEST.inputCorrecto.email,

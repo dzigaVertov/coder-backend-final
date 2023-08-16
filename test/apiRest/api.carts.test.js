@@ -46,6 +46,7 @@ describe('api rest', () => {
 
         describe('POST', () => {
             before(async () => {
+                await usersDaoMongoose.deleteMany({});
                 await loguearUsuarios(cookieAdmin, cookieUser);
             });
 
@@ -82,7 +83,9 @@ describe('api rest', () => {
             });
 
             it('Devuelve status 400 si se intenta crear cart de un usuario que ya lo tiene', async () => {
+
                 let { statusCode } = await httpClient.post('/api/carts').set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]).send({ owner: USUARIO_TEST_2.inputCorrecto.id });
+
                 assert.equal(statusCode, 400);
             });
 

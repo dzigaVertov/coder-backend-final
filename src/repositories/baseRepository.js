@@ -38,6 +38,7 @@ export class BaseRepository {
 
     async findOneAndUpdate(query, newData, options) {
         const daoUpdated = await this.#dao.findOneAndUpdate(query, newData);
+
         const domainUpdated = new this.#domainModel(daoUpdated).datos();
         return domainUpdated;
     }

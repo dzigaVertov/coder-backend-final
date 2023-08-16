@@ -6,3 +6,5 @@ export async function construirJwt(datosUsuario, options) {
     const jwtoken = encriptarJwt(datosUsuario, options);
     return jwtoken;
 }
+
+

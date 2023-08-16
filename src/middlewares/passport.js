@@ -4,21 +4,22 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { ExtractJwt } from 'passport-jwt';
 import { JWT_KEY } from '../config/auth.config.js';
 import { chequearPassword, hashear } from '../utils/criptografia.js';
-import { usersRepository } from '../repositories/userRepository.js';
 import { logger } from '../utils/logger.js';
 import { ExpiredTokenError } from '../models/errors/ExpiredToken.error.js';
 import { AuthenticationError } from '../models/errors/Authentication.error.js';
+import { userService } from '../services/userService.js';
 // import { JsonWebTokenError } from 'jsonwebtoken';
 
 // LOCAL
 passport.use('local', new LocalStrategy({ usernameField: 'email' }, checkUsernamePassword));
 
 async function checkUsernamePassword(email, password, done) {
-    let usuario = await usersRepository.readOne({ email: email });
-    if (!usuario || !chequearPassword(password, usuario.password)) {
-        return done(new AuthenticationError('Error en el login'));
+    try {
+        const usuario = await userService.loginUser(email, password);
+        done(null, usuario);
+    } catch (error) {
+        return done(error);
     }
-    done(null, usuario);
 }
 
 // JWT

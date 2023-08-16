@@ -4,10 +4,11 @@ import Usuario from '../models/userModel.js';
 import { emailService } from './emailService.js';
 import { chequearPassword, hashear } from '../utils/criptografia.js';
 import { RepeatedPasswordError } from '../models/errors/RepeatedPassword.error.js';
-import { PASSWORD_RESET_EXP_TIME } from '../config/auth.config.js';
+import { INACTIVE_USER_DELETE_TIME, PASSWORD_RESET_EXP_TIME } from '../config/auth.config.js';
 import { logger } from '../utils/logger.js';
 import { cartRepository } from '../repositories/cartRepository.js';
 import { DatosConsultaUsuario } from '../models/dtos/DatosConsultaUsuario.js';
+import { AuthenticationError } from '../models/errors/Authentication.error.js';
 
 class UserService {
 
@@ -43,6 +44,16 @@ class UserService {
         return userActualizado;
     }
 
+    async loginUser(email, password) {
+        const usuario = await usersRepository.readOne({ email: email });
+        if (!usuario || !chequearPassword(password, usuario.password)) {
+            throw new AuthenticationError('Error en el login');
+        }
+        const usuarioActualizado = await usersRepository.findOneAndUpdate({ email: email }, { lastActiveAt: new Date() });
+        return usuarioActualizado;
+    }
+
+
     async getAllUsers() {
         const users = await usersRepository.readMany({});
         const dtos = [];
@@ -52,6 +63,26 @@ class UserService {
         }
 
         return dtos;
+    }
+
+    async borrarInactivos() {
+        const users = await usersRepository.readMany({});
+        const usuariosAborrar = [];
+        const ahora = new Date();
+
+        for (const usr of users) {
+            const transcurrido = ahora.getTime() - usr.lastActiveAt.getTime();
+
+            if (transcurrido > INACTIVE_USER_DELETE_TIME) {
+                usuariosAborrar.push(usr.id);
+            }
+        }
+
+        if (usuariosAborrar.length) {
+            const result = await usersRepository.deleteMany({ id: { $in: usuariosAborrar } });
+            return result;
+        }
+        return null;
     }
 
 }

@@ -28,9 +28,13 @@ describe('DAO de Users Mongoose', () => {
     beforeEach(async () => {
         await mongoose.connection.collection('usuarios').deleteMany({});
     });
+
+    afterEach(async () => {
+        await mongoose.connection.collection('usuarios').deleteMany({});
+    });
     describe('create', () => {
         describe('Creación de un usuario genérico', () => {
-            it.only('Lo Almacena - Lo Devuelve correctamente como objeto plano', async () => {
+            it('Lo Almacena - Lo Devuelve correctamente como objeto plano', async () => {
                 const usuarioCreado = await usersDaoMongoose.create(USUARIO_TEST.inputCorrecto);
 
                 assert.deepEqual(toPojo(USUARIO_TEST.inputCorrecto), usuarioCreado);

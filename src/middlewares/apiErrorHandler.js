@@ -19,10 +19,12 @@ export async function apiErrorHandler(error, req, res, next) {
             res.status(400).send({ message: 'password repetido' });
             return;
         case error instanceof NotLoggedInError:
+
             req.logger.debug('Not logged in Error');
             res.status(401).json({ message: 'Not logged in' });
             return;
         case error instanceof AuthorizationError:
+
             req.logger.debug('Authorization Error');
             res.status(401).json({ message: `Authorization Error: ${error.description}` });
             return;
@@ -31,6 +33,7 @@ export async function apiErrorHandler(error, req, res, next) {
             res.status(401).json({ message: `Authentication Error: ${error.description}` });
             return;
         default:
+
             res.status(401).json({ estado: 'error', tipo: error.tipo, descripcion: error.description });
 
 

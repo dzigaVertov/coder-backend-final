@@ -4,7 +4,7 @@ import { NotLoggedInError } from "../models/errors/NotLoggedInError.js";
 export function soloRol(role) {
     function middlewareSoloRol(req, res, next) {
         if (req.user?.role === role) return next();
-        return next(new AuthorizationError(`No autorizado para rol:${role}`))
+        return next(new AuthorizationError(`No autorizado para rol: ${role}`));
     }
 
     return middlewareSoloRol;
@@ -17,18 +17,18 @@ export function soloCartDeUsuarioOadmin() {
         if (req.user?.cart === cid) {
             return next();
         }
-        return next(new AuthorizationError(`No autorizado`))
+        return next(new AuthorizationError(`No autorizado`));
     }
     return middlewareCartUsuario;
 }
 
 export function soloCreaCartPropioUsuarioOadmin() {
     function middlewareCartUsuario(req, res, next) {
-        const { owner } = req.body;
+        const { owner } = req.body;        
         if (req.user.role === 'admin') return next();
         if (req.user.id === owner) return next();
 
-        return next(new AuthorizationError(`No autorizado`))
+        return next(new AuthorizationError(`No autorizado`));
     }
     return middlewareCartUsuario;
 }

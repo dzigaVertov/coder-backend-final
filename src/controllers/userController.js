@@ -96,5 +96,14 @@ export async function putUserController(req, res, next) {
         next(error);
 
     }
+}
+
+export async function deleteInactiveHandler(req, res, next) {
+    try {
+        const response = await userService.borrarInactivos();
+        res.status(201).json(response);
+    } catch (error) {
+        next(error);
+    }
 
 }

@@ -13,7 +13,15 @@ function middlePrueba(req, res, next) {
     next();
 }
 
-apiUsersRouter.get('/', autenticarJwtApi, soloRol('admin'), usersController.getAllUsers);
+apiUsersRouter.get('/',
+    autenticarJwtApi,
+    soloRol('admin'),
+    usersController.getAllUsers);
+
+apiUsersRouter.delete('/',
+    autenticarJwtApi,
+    soloRol('admin'),
+    usersController.deleteInactiveHandler);
 
 apiUsersRouter.post('/', usersController.postUserController);
 
