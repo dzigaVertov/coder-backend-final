@@ -15,12 +15,10 @@ passport.use('local', new LocalStrategy({ usernameField: 'email' }, checkUsernam
 
 async function checkUsernamePassword(email, password, done) {
     try {
-        console.log('trying');
         const usuario = await userService.loginUser(email, password);
-        console.log('usuario: ', usuario);
+
         done(null, usuario);
     } catch (error) {
-        console.log('error: ', error);
         return done(error, false);
     }
 }

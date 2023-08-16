@@ -296,10 +296,20 @@
 **** String de conexión:
 mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbackendfinal?retryWrites=true&w=majority
 *** TODO Resolver vistas
-**** TODO Hacer que login fallido vaya a register
-**** TODO Agregar boton de ir a productos
+**** DONE Hacer que login fallido vaya a register
+**** DONE Agregar boton de ir a productos
+***** DONE en profile
+***** DONE en vista productos
+**** DONE Arreglar dto de usuario en perfil
+**** DONE Arreglar logout
 **** TODO Agregar boton de ir a carrito
+***** en profile
+***** en productos
 **** TODO Agregar botón de comprar carrito
+***** en carrito
+**** TODO Arreglar render de carrito
+**** TODO Arreglar presentación de usuario en profile
+**** TODO Arreglar presentación de producto en vista producto
 **** TODO Agregar usuario admin a base atlas
 **** TODO Agregar error handling de la ruta web
 *** TODO Borrar código de sockets

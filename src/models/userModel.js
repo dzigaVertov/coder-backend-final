@@ -45,7 +45,7 @@ export default class Usuario {
             first_name: this.#first_name,
             last_name: this.#last_name,
             email: this.#email,
-            password: this.#password,
+            //password: this.#password,
             age: this.#age,
             role: this.#role,
             id: this.#id,

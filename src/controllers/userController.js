@@ -38,8 +38,7 @@ export async function postAddToCartController(req, res, next) {
         const pid = req.params.pid;
         const user = req.user;
         const cartId = user.cart;
-        const response = await cartService.agregarProducto(cartId, pid);
-        console.log('response: ', response, cartId);
+        await cartService.agregarProducto(cartId, pid);
 
         res.sendStatus(201);
 
