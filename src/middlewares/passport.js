@@ -15,10 +15,13 @@ passport.use('local', new LocalStrategy({ usernameField: 'email' }, checkUsernam
 
 async function checkUsernamePassword(email, password, done) {
     try {
+        console.log('trying');
         const usuario = await userService.loginUser(email, password);
+        console.log('usuario: ', usuario);
         done(null, usuario);
     } catch (error) {
-        return done(error);
+        console.log('error: ', error);
+        return done(error, false);
     }
 }
 
@@ -99,14 +102,13 @@ export function autenticarJwtView(req, res, next) {
         req.user = jwt_payload;
         next();
     }
-
     const auth_middleware_view = passport.authenticate('jwt', { session: false }, passportCB);
     auth_middleware_view(req, res, next);
 }
 
 export function autenticarLocal(req, res, next) {
 
-    const passMiddleware = passport.authenticate('local', { session: false, failureRedirect: '/login' });
+    const passMiddleware = passport.authenticate('local', { session: false, failureRedirect: '/register' });
 
     return passMiddleware(req, res, next);
 }

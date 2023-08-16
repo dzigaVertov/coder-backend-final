@@ -1,7 +1,7 @@
 const formularioLogin = document.querySelector('#formularioLogin');
 
 if (formularioLogin instanceof HTMLFormElement) {
-    formularioLogin.addEventListener('submit', loginSubmit)
+    formularioLogin.addEventListener('submit', loginSubmit);
 }
 
 async function loginSubmit(event) {
@@ -16,7 +16,7 @@ async function loginSubmit(event) {
             password: pass.value
         };
 
-        const {status} = await fetch('/api/sessions/login', {
+        const { status } = await fetch('/api/sessions/login', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -25,8 +25,17 @@ async function loginSubmit(event) {
             body: JSON.stringify(datosUsuario)
         });
 
-        if([200,201].includes(status)){
-            window.location.href = '/profile'
+        if ([200, 201].includes(status)) {
+            window.location.href = '/profile';
+        }
+
+        if (status === 404) {
+            alert('¡¡Usuario no encontrado!!');
+            window.location.href = '/register';
+        }
+        if (status === 401) {
+            alert('¡¡El login falló!!');
+            window.location.href = '/login';
         }
     }
 }

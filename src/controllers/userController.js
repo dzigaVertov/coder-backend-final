@@ -35,11 +35,11 @@ export async function postUserSendLinkController(req, res, next) {
 
 export async function postAddToCartController(req, res, next) {
     try {
-        console.log('en controller');
         const pid = req.params.pid;
         const user = req.user;
-        const cartId = user.cartId;
-        cartService.agregarProducto(cartId, pid);
+        const cartId = user.cart;
+        const response = await cartService.agregarProducto(cartId, pid);
+        console.log('response: ', response, cartId);
 
         res.sendStatus(201);
 
