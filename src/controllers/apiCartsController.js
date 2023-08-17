@@ -26,6 +26,7 @@ export async function postHandler(req, res, next) {
 export async function getCartDeUsuarioHandler(req, res, next) {
     try {
         const userId = req.user.id;
+        
         const cart = await cartService.obtenerCartDeUsuario(userId);
         res.status(200).json(cart);
     } catch (error) {
@@ -99,8 +100,7 @@ export async function vaciarCarritoHandler(req, res, next) {
 export async function purchaseHandler(req, res, next) {
     let cartId = req.params.cid || req.user.cart;
     try {
-        const purchaseTicket = await purchaseService.createPurchase(cartId);
-        console.log('ticket: ', purchaseTicket);
+        const purchaseTicket = await purchaseService.createPurchase(cartId);        
         res.status(200).json(purchaseTicket);
     } catch (error) {
         next(error);

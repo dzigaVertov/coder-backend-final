@@ -10,6 +10,18 @@ export function soloRol(role) {
     return middlewareSoloRol;
 }
 
+export function soloUsuarioOAdmin() {
+    function middlewareUsuario(req, res, next) {
+        const uid = req.params.uid;
+        if (req.user?.role === 'admin') return next();
+        if (req.user?.id === uid) {
+            return next();
+        }
+        return next(new AuthorizationError(`No autorizado`));
+    }
+    return middlewareUsuario;
+}
+
 export function soloCartDeUsuarioOadmin() {
     function middlewareCartUsuario(req, res, next) {
         const cid = req.params.cid;
@@ -24,7 +36,7 @@ export function soloCartDeUsuarioOadmin() {
 
 export function soloCreaCartPropioUsuarioOadmin() {
     function middlewareCartUsuario(req, res, next) {
-        const { owner } = req.body;        
+        const { owner } = req.body;
         if (req.user.role === 'admin') return next();
         if (req.user.id === owner) return next();
 

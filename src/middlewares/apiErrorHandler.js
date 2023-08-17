@@ -9,6 +9,7 @@ export async function apiErrorHandler(error, req, res, next) {
 
     switch (true) {
         case error instanceof InvalidArgumentError:
+
             res.sendStatus(400);
             return;
         case error instanceof NotFoundError:
@@ -33,6 +34,7 @@ export async function apiErrorHandler(error, req, res, next) {
             res.status(401).json({ message: `Authentication Error: ${error.description}` });
             return;
         default:
+            console.log('este es el error en uno: ', error);
             res.status(401).json({ estado: 'error', tipo: error.tipo, descripcion: error.description });
 
 

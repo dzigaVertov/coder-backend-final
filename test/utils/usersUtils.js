@@ -27,7 +27,9 @@ export async function loguearUsuarios(cookieAdmin, cookieUser) {
         email: USUARIO_TEST.inputCorrecto.email,
         password: USUARIO_TEST.inputCorrecto.password
     };
+
     const resultAdmin = await httpClient.post('/api/sessions/login').send(datosLogin);
+
     const cookieResult = resultAdmin.headers['set-cookie'][0];
     cookieAdmin.name = cookieResult.split('=')[0];
     cookieAdmin.value = cookieResult.split('=')[1];

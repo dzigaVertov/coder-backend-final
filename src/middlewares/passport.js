@@ -8,6 +8,7 @@ import { logger } from '../utils/logger.js';
 import { ExpiredTokenError } from '../models/errors/ExpiredToken.error.js';
 import { AuthenticationError } from '../models/errors/Authentication.error.js';
 import { userService } from '../services/userService.js';
+import {toPojo} from '../utils/topojo.js';
 // import { JsonWebTokenError } from 'jsonwebtoken';
 
 // LOCAL
@@ -81,8 +82,7 @@ export function autenticarReset(req, res, next) {
 
 export function autenticarJwtApi(req, res, next) {
     function passportCB(error, jwt_payload, info) {
-        if (error || !jwt_payload) {
-            console.log('no jwt payload', error, jwt_payload);
+        if (error || !jwt_payload) {            
             return next(new AuthenticationError('Error de autenticación'));
         }
         req.user = jwt_payload;

@@ -38,8 +38,6 @@ export async function postHandler(req, res, next) {
     try {
         const paramsProducto = req.body;
         const producto = await productService.agregarProducto(paramsProducto);
-        const productos = await productService.obtenerListaProductos({});
-        req.io.sockets.emit('actualizacion', productos);
         res.status(201).json(producto);
     } catch (error) {
         next(error);
@@ -62,8 +60,6 @@ export async function delHandler(req, res, next) {
     const pid = req.params.pid;
     try {
         const producto = await productService.borrarProducto(pid);
-        let productos = await prodRepository.getProducts();
-        req.io.sockets.emit('actualizacion', productos);
         res.json(producto);
     } catch (error) {
         next(error);
@@ -75,8 +71,6 @@ export async function postRealTimeProducts(req, res, next) {
     try {
 
         let producto = await prodRepository.addProduct(req.body);
-        let productos = await prodRepository.getProducts();
-        req.io.sockets.emit('actualizacion', productos);
         res.json(producto);
 
     } catch (error) {

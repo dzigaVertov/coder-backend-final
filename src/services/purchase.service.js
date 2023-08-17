@@ -3,11 +3,12 @@ import { prodRepository } from '../repositories/productRepository.js';
 import { usersRepository } from '../repositories/userRepository.js';
 import { ticketRepository } from '../repositories/ticketRepository.js';
 import { cartRepository } from '../repositories/cartRepository.js';
+import { InvalidOperationError } from '../models/errors/InvalidOperation.error.js';
 
 class PurchaseService {
     async createPurchase(cartId) {
         const cart = await cartRepository.readOne({ id: cartId });
-
+        if (!cart.productos.length) throw new InvalidOperationError('El cart no tiene productos');
         const { prodsConStock, prodsSinStock } = await separarProdsStock(cart.productos);
         await actualizarStocks(prodsConStock);
         const total = await calcularTotalTicket(prodsConStock);

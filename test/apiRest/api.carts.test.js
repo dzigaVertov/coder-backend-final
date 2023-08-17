@@ -70,9 +70,8 @@ describe('api rest', () => {
 
 
             it('Crea un cart nuevo - Devuelve el cart creado y status 201 - agrega el cartId a datos de usuario', async () => {
-
+                
                 let { _body, statusCode } = await httpClient.post('/api/carts').set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]).send({ owner: USUARIO_TEST.inputCorrecto.id });
-
                 const { cartOwner, productos, id } = _body;
                 const user = await usersDaoMongoose.readOne({ id: USUARIO_TEST.inputCorrecto.id });
                 assert.ok(productos instanceof Array && productos.length == 0);
@@ -126,7 +125,6 @@ describe('api rest', () => {
                 let { _body, statusCode } = await httpClient.get('/api/carts').set('Cookie', [`${cookieUser.name}=${cookieUser.value}`]);
 
                 assert.equal(statusCode, 200);
-
                 assert.deepEqual(_body, {
                     productos: [],
                     cartOwner: USUARIO_TEST_2.inputCorrecto.id,

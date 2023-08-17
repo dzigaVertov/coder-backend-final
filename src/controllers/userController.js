@@ -1,3 +1,4 @@
+import { DatosConsultaUsuario } from '../models/dtos/DatosConsultaUsuario.js';
 import { usersRepository } from '../repositories/userRepository.js';
 import { cartService } from '../services/cartService.js';
 import { construirJwt } from '../services/sessionServices.js';
@@ -8,12 +9,14 @@ export async function postUserController(req, res, next) {
 
     try {
         const datosUsuario = req.body;
-        const usuario = toPojo(await userService.crearUsuario(datosUsuario));
+        const usuario = await userService.crearUsuario(datosUsuario);
 
         const jwtoken = await construirJwt(usuario);
         req.logger.info(`Creado jwtoken en postUserController - ${new Date().toLocaleString()}`);
         res.cookie('jwt', jwtoken, { maxAge: 100000, httpOnly: true, signed: true });
-        res.status(201).json(usuario);
+        const datosConsulta = new DatosConsultaUsuario(usuario);
+
+        res.status(201).json(datosConsulta);
 
     } catch (error) {
         req.logger.error(`Error: ${error.message} atrapado en postUserController `);
@@ -65,7 +68,7 @@ export async function postUserNewPassController(req, res, next) {
 export async function getUserController(req, res, next) {
     try {
         const uid = req.params.uid;
-        const usuario = await usersRepository.readOne({ id: uid });
+        const usuario = await userService.obtenerDatosConsulta({id:uid});
         req.logger.debug(`usuario leído en getUserController - ${new Date().toLocaleString()}`);
         res.status(200).json(usuario);
     } catch (error) {

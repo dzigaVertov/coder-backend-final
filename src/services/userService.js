@@ -18,7 +18,7 @@ class UserService {
         const cartUsuario = await cartRepository.create(usuarioCreado.id);
         const usuarioCompleto = await usersRepository.findOneAndUpdate({ id: usuarioCreado.id }, { cart: cartUsuario.id });
 
-        return new DatosConsultaUsuario(usuarioCompleto);
+        return usuarioCompleto;
 
     }
 
@@ -44,12 +44,19 @@ class UserService {
         return userActualizado;
     }
 
-    async loginUser(email, password) {
-        const usuario = await usersRepository.readOne({ email: email });
+    async obtenerDatosConsulta(query){
+        const usuario = await usersRepository.readOne(query);
+        const datosConsulta = new DatosConsultaUsuario(usuario);
+        return datosConsulta;
+    }
+
+    async loginUser(email, password) {        
+        const usuario = await usersRepository.readOne({ email: email });        
         if (!usuario || !chequearPassword(password, usuario.password)) {
             throw new AuthenticationError('Error en el login');
         }
         const usuarioActualizado = await usersRepository.findOneAndUpdate({ email: email }, { lastActiveAt: new Date() });
+        
         return usuarioActualizado;
     }
 

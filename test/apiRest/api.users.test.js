@@ -49,7 +49,7 @@ describe('api rest', () => {
                 it('Creación de usuario, status: 201, body:dto', async () => {
 
                     const response = await httpClient.post('/api/users').send(USUARIO_TEST.inputCorrecto);
-                    assert.equal(response.statusCode, 201);
+                    assert.equal(response.statusCode, 201);                  
                     assert.deepEqual(USUARIO_TEST.dto, response.body);
 
                 });
@@ -64,19 +64,22 @@ describe('api rest', () => {
         });
 
         describe('GET userId', () => {
-            beforeEach(async () => {
+            let cookieAdmin = {};
+            let cookieUser = {};
+
+            before(async () => {
                 await usersDaoMongoose.deleteMany({});
-                const datosUsuario = USUARIO_TEST.inputCorrecto;
-                await usersDaoMongoose.create(datosUsuario);
+                await loguearUsuarios(cookieAdmin, cookieUser);
             });
 
-            afterEach(async () => {
+            after(async () => {
                 await usersDaoMongoose.deleteMany({});
             });
+
             describe('Envío de petición con id en req params:', () => {
                 it('Devuelve dto de usuario y statusCode 200', async () => {
                     const urlstring = '/api/users/' + USUARIO_TEST.inputCorrecto.id;
-                    const response = await httpClient.get(urlstring);
+                    const response = await httpClient.get(urlstring).set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]);
                     assert.equal(response.statusCode, 200);
                     assert.deepEqual(response.body, toPojo(USUARIO_TEST.datos));
                 });

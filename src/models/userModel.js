@@ -32,7 +32,7 @@ export default class Usuario {
     get_age() { return this.#age; }
     get_role() { return this.#role; }
     get_id() { return this.#id; }
-    get_lastActive() { return this.#lastActiveAt };
+    get_lastActive() { return this.#lastActiveAt; };
 
     set_role(newRole) {
         if (!valid.esRole(newRole)) throw new Error('No es rol válido');
@@ -73,7 +73,7 @@ export const USUARIO_TEST = {
         first_name: 'Marcelo',
         last_name: 'Ortega',
         email: 'marceloortega@gmail.com',
-        age: 75,
+        age: 90,
         role: 'user',
         password: '123',
         id: 'abc23-34',
@@ -83,7 +83,7 @@ export const USUARIO_TEST = {
         first_name: 'Marcelo',
         last_name: 'Ortega',
         email: 'marceloortega@gmail.com',
-        age: 75,
+        age: 90,
         role: 'hacker',
         password: '123',
         id: 'abc23-34',
@@ -93,7 +93,7 @@ export const USUARIO_TEST = {
         first_name: 'Marcelo',
         last_name: 'Ortega',
         email: 'www.google.com',
-        age: 75,
+        age: 90,
         role: 'user',
         password: '123',
         id: 'abc23-34',
@@ -119,11 +119,11 @@ export const USUARIO_TEST = {
         first_name: 'Marcelo',
         last_name: 'Ortega',
         email: 'marceloortega@gmail.com',
-        age: 75,
-        role: 'user',
-        id: 'abc23-34',
-                password: '123',
-        lastActiveAt: activo
+        //age: 90,
+        role: 'admin',
+        //id: 'abc23-34',
+        //password: '123',
+        //lastActiveAt: activo
     }
 
 }
@@ -179,7 +179,7 @@ export const USUARIO_TEST_2 = {
         email: 'brunolopez@gmail.com',
         age: 75,
         role: 'user',
-        password: '123',
+        //password: '123',
         id: 'abc23-asgge34'
     }
 

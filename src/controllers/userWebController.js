@@ -1,8 +1,10 @@
+import { DatosConsultaUsuario } from "../models/dtos/DatosConsultaUsuario.js";
 import { construirJwt } from "../services/sessionServices.js";
 
 export async function handleGetProfile(req, res, next) {
     if (req.user) {
-        res.render('perfil', { usuario: req.user });
+        const datosUsuario = new DatosConsultaUsuario(req.user);
+        res.render('perfil', { usuario: datosUsuario });
     } else {
         res.redirect('/login');
     }

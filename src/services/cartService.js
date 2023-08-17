@@ -16,6 +16,7 @@ class CartService {
         // Chequear que el user no tenga ya un cart
         const cart = await cartRepository.readOne({ cartOwner: ownerId });
         if (cart) throw new InvalidArgumentError('El usuario ya tiene un cart creado');
+
         const nuevoCart = await cartRepository.create(ownerId);
 
         await userService.actualizarUsuario(ownerId, { cart: nuevoCart.id });
@@ -24,6 +25,10 @@ class CartService {
 
     async obtenerCartDeUsuario(userId) {
         const cart = await cartRepository.readOne({ cartOwner: userId });
+        if(!cart){
+            const nuevoCart = await crearCart(userId);
+            return nuevoCart;
+        }
         return cart;
     }
 

@@ -42,6 +42,7 @@ class CartRepository extends BaseRepository {
         let carritoActualizado = await this.dao.updateProductos(cartId, []);
         return carritoActualizado;
     }
+
 }
 
 export const cartRepository = new CartRepository(cartsDao, Cart);

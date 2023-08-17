@@ -2,7 +2,7 @@ import { Router } from 'express';
 import * as usersController from '../controllers/userController.js';
 import { autenticarJwtApi, autenticarReset } from '../middlewares/passport.js';
 import passport from 'passport';
-import { soloLogueado, soloRol } from '../middlewares/autorizacion.js';
+import { soloLogueado, soloRol, soloUsuarioOAdmin } from '../middlewares/autorizacion.js';
 const apiUsersRouter = Router();
 export default apiUsersRouter;
 
@@ -34,7 +34,10 @@ apiUsersRouter.post('/addtocart/:pid',
 
 apiUsersRouter.post('/newpassword', passport.authenticate('jwt', { session: false }), usersController.postUserNewPassController);
 
-apiUsersRouter.get('/:uid', usersController.getUserController);
+apiUsersRouter.get('/:uid',
+                   autenticarJwtApi,
+                   soloUsuarioOAdmin(),
+                   usersController.getUserController);
 
 
 apiUsersRouter.put('/', autenticarJwtApi, usersController.putUserController);
