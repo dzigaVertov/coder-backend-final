@@ -295,7 +295,7 @@
 *** DONE Resolver deployment
 **** String de conexión:
 mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbackendfinal?retryWrites=true&w=majority
-*** TODO Resolver vistas
+*** DONE Resolver vistas
 **** DONE Hacer que login fallido vaya a register
 **** DONE Agregar boton de ir a productos
 ***** DONE en profile
@@ -305,15 +305,16 @@ mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbacke
 **** DONE Agregar boton de ir a carrito
 ***** DONE en profile
 ***** DONE en productos
-**** TODO Agregar botón de comprar carrito
+**** DONE Agregar botón de comprar carrito
 ***** en carrito
-**** TODO Arreglar render de carrito
-**** TODO Arreglar presentación de usuario en profile
-**** TODO Arreglar presentación de producto en vista producto
-**** TODO Agregar usuario admin a base atlas
-**** TODO Agregar error handling de la ruta web
-*** TODO Borrar código de sockets
-*** TODO Limpieza general
+**** DONE Arreglar render de carrito
+**** DONE Arreglar presentación de usuario en profile
+**** DONE Arreglar presentación de producto en vista producto
+**** DONE Agregar usuario admin a base atlas
+**** DONE Agregar error handling de la ruta web
+*** DONE Borrar código de sockets
+*** DONE Limpieza general
+*** TODO Arreglar README
 *** TODO Entrega
 
 * Notas

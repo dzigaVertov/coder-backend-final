@@ -35,6 +35,10 @@ apiCartsRouter.post('/:cid/product/:pid',
     soloCartDeUsuarioOadmin(),
     apiCartsController.postProductHandler);
 
+apiCartsRouter.delete('/vaciarcarrito',
+    autenticarJwtApi,
+    apiCartsController.vaciarCarritoHandler);
+
 apiCartsRouter.put('/:cid/product/:pid',
     autenticarJwtApi,
     soloCartDeUsuarioOadmin(),

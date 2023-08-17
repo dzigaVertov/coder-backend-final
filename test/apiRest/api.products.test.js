@@ -8,51 +8,15 @@ import { managerProductosMongo } from '../../src/DAO/ProductManagerMongo.js';
 import { fetchFromMongoDb, insertIntoMongoDb } from '../../src/utils/mongooseUtils.js';
 import { PRODUCTO_TEST } from '../../src/models/productoModel.js';
 import { hashear } from '../../src/utils/criptografia.js';
-
+import { loguearUsuarios } from '../utils/usersUtils.js';
 
 const httpClient = supertest('http://localhost:8080');
 
 describe('api rest', () => {
     describe('/api/products', () => {
-        let cookieAdmin;         // el POST de productos requiere un usuario administrador
-        let cookieUser;
+        let cookieAdmin = {};         // el POST de productos requiere un usuario administrador
+        let cookieUser = {};
         let productoEnDb;
-        async function loguearUsuarios() {
-            
-            // Crear un usuario admin para postear productos
-            const passHasheado = hashear(USUARIO_TEST.inputCorrecto.password);
-            const userTestAdmin = { ...USUARIO_TEST.inputCorrecto, role: 'admin', password: passHasheado };
-            // Crear usuario user para testear autorizacion de POST
-            const passHashUser = hashear(USUARIO_TEST_2.inputCorrecto.password);
-            const userTestUser = { ...USUARIO_TEST_2.inputCorrecto, password: passHashUser };
-
-            await insertIntoMongoDb(userTestAdmin, 'usuarios');
-            await insertIntoMongoDb(userTestUser, 'usuarios');
-
-            // Loguear role: admin
-            const datosLogin = {
-                email: USUARIO_TEST.inputCorrecto.email,
-                password: USUARIO_TEST.inputCorrecto.password
-            };
-            const resultAdmin = await httpClient.post('/api/sessions/login').send(datosLogin);
-            const cookieResult = resultAdmin.headers['set-cookie'][0];
-            cookieAdmin = {
-                name: cookieResult.split('=')[0],
-                value: cookieResult.split('=')[1]
-            };
-
-            // Loguear role: user
-            const datosLoginUser = {
-                email: USUARIO_TEST_2.inputCorrecto.email,
-                password: USUARIO_TEST_2.inputCorrecto.password
-            };
-            const resultUser = await httpClient.post('/api/sessions/login').send(datosLoginUser);
-            const cookieResultUser = resultUser.headers['set-cookie'][0];
-            cookieUser = {
-                name: cookieResultUser.split('=')[0],
-                value: cookieResultUser.split('=')[1]
-            };
-        };
 
         before(async () => {
             const productos = crearMockProducto(30);
@@ -96,7 +60,10 @@ describe('api rest', () => {
         });
 
         describe('POST', () => {
-            before(loguearUsuarios);
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+            });
+
 
             after(async () => {
                 await usersDaoMongoose.deleteMany({});
@@ -105,6 +72,7 @@ describe('api rest', () => {
             it('Agrega producto exitosamente, devuelve los datos de producto agregado y statusCode 201', async () => {
 
                 const { _body, statusCode } = await httpClient.post('/api/products').set('Cookie', [`${cookieAdmin.name}=${cookieAdmin.value}`]).send(PRODUCTO_TEST.inputCorrecto);
+                console.log('status: ', statusCode);
                 assert.deepEqual(_body, PRODUCTO_TEST.inputCorrecto);
                 assert.equal(statusCode, 201);
             });
@@ -127,7 +95,9 @@ describe('api rest', () => {
         });
 
         describe('PUT', () => {
-            before(loguearUsuarios); // La modificación de productos requiere un usuario admin
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+            });
             after(async () => {
                 await usersDaoMongoose.deleteMany({});
             });
@@ -178,7 +148,9 @@ describe('api rest', () => {
 
         describe('DELETE', () => {
             let productoAborrar;
-            before(loguearUsuarios); // La eliminación de productos requiere un usuario admin
+            before(async () => {
+                await loguearUsuarios(cookieAdmin, cookieUser);
+            });
             after(async () => {
                 await usersDaoMongoose.deleteMany({});
 

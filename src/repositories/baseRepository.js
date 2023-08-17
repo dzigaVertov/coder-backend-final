@@ -21,6 +21,7 @@ export class BaseRepository {
     async readOne(query, options) {
         logger.debug(`Objecto leído en BaseRepository - ${new Date().toLocaleDateString()}`);
         const queryResult = await this.#dao.readOne(query);
+        const domain = new this.#domainModel(queryResult).datos();
         return queryResult;
     }
 

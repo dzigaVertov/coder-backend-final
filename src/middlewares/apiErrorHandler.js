@@ -33,7 +33,6 @@ export async function apiErrorHandler(error, req, res, next) {
             res.status(401).json({ message: `Authentication Error: ${error.description}` });
             return;
         default:
-
             res.status(401).json({ estado: 'error', tipo: error.tipo, descripcion: error.description });
 
 

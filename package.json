@@ -10,7 +10,7 @@
         "start:atlas": "NODE_ENV='production' MONGO_STRING='mongodb+srv://marcelo:uvGvmX2P-eHR95T@clustergomez.donxymd.mongodb.net/testbackendfinal?retryWrites=true&w=majority' node .",
         "start:test": "NODE_ENV='test' MONGO_STRING='mongodb://127.0.0.1/ecommerceTest' node . ",
         "start:testdemon": "NODE_ENV='test' MONGO_STRING='mongodb://127.0.0.1/ecommerceTest' nodemon -e 'js,html, txt, json, handlebars' . ",
-        "test": "NODE_ENV='test' MONGO_STRING='mongodb://127.0.0.1/ecommerceDev' mocha --recursive",
+        "test": "NODE_ENV='test' MONGO_STRING='mongodb://127.0.0.1/ecommerceTest' mocha --recursive",
         "test:demon": "NODE_ENV='test' MONGO_STRING='mongodb://127.0.0.1/ecommerceTest' nodemon --exec mocha --recursive"
     },
     "repository": {

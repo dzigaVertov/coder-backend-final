@@ -87,7 +87,7 @@ export async function deleteProductHandler(req, res, next) {
 
 export async function vaciarCarritoHandler(req, res, next) {
     try {
-        let idCarrito = req.params.cid;
+        let idCarrito = req.params.cid || req.user.cart;
         let carritoActualizado = await cartRepository.vaciarCarrito(idCarrito);
         res.status(200).json(carritoActualizado);
     } catch (error) {
